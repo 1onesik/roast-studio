@@ -685,24 +685,111 @@
     }
     .key-btn.ent { background: var(--copper); }
 
-    /* 아이폰(세로 모드 또는 화면폭 820px 미만) 자동 반응형 분기 */
+    /* 아이폰/모바일 화면 최적화 (스크롤 최소화 및 컴팩트 배치) */
     @media (max-width: 820px) {
       body {
         overflow-y: auto;
         height: auto;
         min-height: 100dvh;
+        padding: 6px 8px env(safe-area-inset-bottom, 8px) 8px;
+        gap: 6px;
+      }
+      .top-header {
+        gap: 6px;
+        padding-top: 2px;
+      }
+      .brand-badge {
+        padding: 4px 8px;
+      }
+      .timer-hero {
+        font-size: 20px;
+      }
+      .pill-btn {
+        padding: 5px 9px;
+        font-size: 11px;
       }
       .workspace {
         flex-direction: column;
+        gap: 6px;
       }
       .right-col {
         width: 100%;
+        gap: 6px;
+      }
+      .left-col {
+        gap: 6px;
+      }
+      .phase-bar {
+        gap: 4px;
+      }
+      .phase-pill {
+        padding: 5px 8px;
       }
       .chart-card {
-        min-height: 260px;
+        min-height: 190px;
+        padding: 6px;
+      }
+      .chart-container {
+        min-height: 150px;
+      }
+      .log-card {
+        height: 85px;
+      }
+      .hero-card {
+        padding: 8px 10px;
+      }
+      .hero-bt {
+        font-size: 32px;
+      }
+      .hero-ror {
+        font-size: 20px;
+      }
+      .sub-metrics {
+        gap: 4px;
+      }
+      .mini-box {
+        padding: 5px 6px;
+      }
+      .mini-val {
+        font-size: 14px;
+      }
+      .heater-card {
+        padding: 6px 8px;
+        gap: 4px;
+      }
+      .step-btn {
+        width: 40px;
+        height: 28px;
+        font-size: 11px;
       }
       .camera-row {
-        height: 120px;
+        height: 90px;
+        gap: 4px;
+      }
+      .cam-side-btns {
+        width: 80px;
+        gap: 3px;
+      }
+      .cam-btn {
+        font-size: 9px;
+      }
+      .milestone-row {
+        gap: 4px;
+      }
+      .mile-btn {
+        padding: 8px 2px;
+        font-size: 10px;
+      }
+      .action-bar-wrap {
+        height: 38px;
+      }
+      .start-btn {
+        font-size: 13px;
+        border-radius: 9px;
+      }
+      .hold-drop-bar {
+        border-radius: 9px;
+        font-size: 11px;
       }
     }
   </style>
