@@ -1704,7 +1704,8 @@
         if (!state.ocrWorker) {
           state.ocrWorker = await Tesseract.createWorker("eng");
           await state.ocrWorker.setParameters({
-            tessedit_char_whitelist: "0123456789.-°C"
+            tessedit_char_whitelist: "0123456789.-",
+            tessedit_pageseg_mode: "7"
           });
         }
         document.getElementById("ocrStatusLabel").textContent = "인식 스캔 중";
@@ -1729,11 +1730,42 @@
             var sx = (video.videoWidth - cropW) / 2;
             var sy = (video.videoHeight - cropH) / 2;
 
-            canvas.width = 360;
-            canvas.height = 160;
-            var ctx = canvas.getContext("2d");
-            ctx.filter = "grayscale(100%) contrast(175%)";
+            
+            canvas.width = 400;
+            canvas.height = 180;
+            var ctx = canvas.getContext("2d", { willReadFrequently: true });
+            
+            // Draw original cropped region
             ctx.drawImage(video, sx, sy, cropW, cropH, 0, 0, canvas.width, canvas.height);
+            
+            // Advanced 7-segment Binarization & Thickening
+            var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imgData.data;
+            
+            // 1. Grayscale and Adaptive Thresholding
+            var avgLuma = 0;
+            for (var i = 0; i < data.length; i += 4) {
+                var luma = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
+                data[i] = data[i+1] = data[i+2] = luma;
+                avgLuma += luma;
+            }
+            avgLuma /= (data.length / 4);
+            var threshold = avgLuma * 0.85; // Slightly aggressive threshold to catch thin LCD segments
+            
+            for (var i = 0; i < data.length; i += 4) {
+                var luma = data[i];
+                // TM-902C has dark text on light background. Make text black (0), background white (255)
+                var v = luma < threshold ? 0 : 255; 
+                data[i] = data[i+1] = data[i+2] = v;
+            }
+            ctx.putImageData(imgData, 0, 0);
+            
+            // 2. Thickening (Dilation) to connect 7-segment gaps
+            // Tesseract struggles with disconnected segments. We draw strokes over the black pixels.
+            // A simple CSS blur or JS convolution is too heavy. 
+            // Better: use ctx.filter = 'blur(1px)' and draw again, but let's just rely on PSM 7 and binarization first, 
+            // as pure B&W with PSM 7 usually drastically fixes the issue.
+
 
             var res = await state.ocrWorker.recognize(canvas);
             var temp = extractTemperatureFromText(res.data.text);
