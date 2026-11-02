@@ -1536,52 +1536,44 @@
     }
 
     // =========================================================================
-    // 4. 200℃ 이상 오인식(20.0℃ 전환) 완벽 보정 OCR 알고리즘
+    
     // =========================================================================
-    function sanitizeSevenSegment(raw) {
-      var s = String(raw || "")
-        .replace(/°C|℃|'C|°F|°|º/gi, " ")
-        .replace(/,|·/g, ".");
-      var map = { O: "0", o: "0", D: "0", Q: "0", I: "1", l: "1", "|": "1", "!": "1", Z: "2", z: "2", S: "5", s: "5", B: "8", g: "9", q: "9" };
-      s = s.split("").map(function(ch) { return map[ch] !== undefined ? map[ch] : ch; }).join("");
-      s = s.replace(/(\d)\s+(?=[\d.])/g, "$1").replace(/(\.)\s+(?=\d)/g, "$1");
-      return s.trim();
-    }
-
+    // 4. TM-902C 전용 하드웨어 맞춤형 OCR (7-Segment Dilation & Sync)
+    // =========================================================================
+    // TM-902C 특성 완벽 반영: 
+    // 1. 200도 미만은 반드시 소수점 1자리. (예: 116.0)
+    // 2. 200도 이상은 반드시 소수점 없는 정수 3자리. (예: 202)
     function extractTemperatureFromText(text) {
-      var sanitized = sanitizeSevenSegment(text);
+      // Tesseract가 뱉은 결과에서 오직 숫자만 추출 (7세그먼트 단절로 인한 찌꺼기 문자 제거)
+      var s = text.replace(/[^\d]/g, ""); 
+      if (!s) return null;
+
       var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : null;
-      var highTempContext = (lastBT !== null && lastBT >= 120.0) || state.seconds >= 50 || state.yellowSec !== null || state.firstCrackSec !== null;
+      var highTempContext = (lastBT !== null && lastBT >= 150.0) || state.seconds >= 50 || state.yellowSec !== null || state.firstCrackSec !== null;
 
-      var decMatch = sanitized.match(/(?:^|[^\d])(\d{2,3}\.\d)(?!\d)/);
-      if (decMatch && decMatch[1]) {
-        var val = parseFloat(decMatch[1]);
-        if (highTempContext && val >= 17.5 && val <= 26.0) {
-          val *= 10.0;
-        }
-        if (val >= 12 && val <= 260) return val;
-      }
-
-      var fourMatch = sanitized.match(/(?:^|[^\d])(\d{4})(?!\d)/);
-      if (fourMatch && fourMatch[1]) {
-        var val4 = parseFloat(fourMatch[1]) / 10.0;
-        if (val4 >= 12 && val4 <= 260) return val4;
-      }
-
-      var threeMatch = sanitized.match(/(?:^|[^\d])(\d{3})(?!\d)/);
-      if (threeMatch && threeMatch[1]) {
-        var intVal = parseFloat(threeMatch[1]);
+      // 1) 고온 구간 (TM-902C는 200도 이상에서 무조건 3자리 정수로 전환됨)
+      if (highTempContext && s.length === 3) {
+        var intVal = parseFloat(s);
         if (intVal >= 175 && intVal <= 260) {
-          if (highTempContext || (lastBT === null && intVal >= 195 && intVal <= 250)) {
-            return intVal;
-          }
-        }
-        var decVal = intVal / 10.0;
-        if (lastBT !== null && Math.abs(intVal - lastBT) < Math.abs(decVal - lastBT) && intVal <= 260) {
           return intVal;
         }
+      }
+
+      // 2) 저온/일반 구간 (무조건 10으로 나누어 소수점 1자리로 강제 보정)
+      // Tesseract가 소수점을 인식하든 말든 글자(3~4자리)만 읽어오면 하드웨어 스펙에 맞춰 수학적으로 찍어버림.
+      // 예: "1160" -> 116.0℃, "254" -> 25.4℃
+      if (s.length >= 3 && s.length <= 4) {
+        var decVal = parseFloat(s) / 10.0;
+        
+        // 200도 부근에서 "202"가 들어왔을 때, 고온 문맥이 아니면 20.2로 오인될 수 있음.
+        // 이때 직전 온도가 190도대 였다면 20.2가 아니라 202 정수임을 교차 검증.
+        if (lastBT !== null && Math.abs(parseFloat(s) - lastBT) < Math.abs(decVal - lastBT) && parseFloat(s) >= 175 && parseFloat(s) <= 260) {
+            return parseFloat(s);
+        }
+
         if (decVal >= 12 && decVal <= 260) return decVal;
       }
+
       return null;
     }
 
@@ -1592,14 +1584,14 @@
       var last = state.logs[state.logs.length - 1];
       if (last.bt >= 140 && val < 60) return false;
       var dt = Math.max(state.seconds - last.sec, 1);
-      var allowedJump = Math.min(8.0 * dt + 4.5, 45.0);
+      var allowedJump = Math.min(9.0 * dt + 5.0, 45.0);
       return Math.abs(val - last.bt) <= allowedJump;
     }
 
     function ingestOCRValue(val) {
       var now = Date.now();
       document.getElementById("ocrStatusLabel").textContent = "인식: " + val.toFixed(1) + "℃";
-      state.recentReadings = state.recentReadings.filter(function(r) { return now - r.time <= 1800; });
+      state.recentReadings = state.recentReadings.filter(function(r) { return now - r.time <= 1500; });
 
       var matched = null;
       for (var i = 0; i < state.recentReadings.length; i++) {
@@ -1609,16 +1601,13 @@
         }
       }
       state.recentReadings.push({ value: val, time: now });
-      if (state.recentReadings.length > 4) state.recentReadings.shift();
+      if (state.recentReadings.length > 3) state.recentReadings.shift();
 
       if (!matched) return;
       if (now - state.lastEmitTime < 450) return;
       state.lastEmitTime = now;
 
       var agreed = Math.round(((val + matched.value) / 2.0) * 10) / 10;
-      if (state.logs.length && state.logs[state.logs.length - 1].bt >= 150 && agreed >= 17.5 && agreed <= 26.0) {
-        agreed *= 10.0;
-      }
 
       if (isReasonableReading(agreed)) {
         state.allowNextJump = false;
@@ -1649,7 +1638,7 @@
       }
 
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("카메라 기능은 GitHub Pages(https://) 주소로 접속했을 때만 활성화됩니다. 파일 앱 미리보기가 아닌 사파리 주소창으로 접속해주세요.");
+        alert("카메라 기능은 사파리(Safari) 주소창에서 https:// 주소로 접속했을 때만 작동합니다.");
         return;
       }
 
@@ -1665,7 +1654,7 @@
         ocrBtn.disabled = false;
         document.getElementById("ocrStatusLabel").textContent = "OCR 대기 중";
       } catch (err) {
-        alert("카메라 권한을 허용해주세요: 설정 > Safari > 카메라 > 허용");
+        alert("설정 > Safari > 카메라 권한을 허용해주세요.");
       }
     }
 
@@ -1690,7 +1679,7 @@
       }
 
       if (typeof window.Tesseract === "undefined") {
-        alert("OCR 엔진을 불러오는 중입니다. 인터넷 연결을 확인하고 2초 뒤 다시 눌러주세요.");
+        alert("엔진 로드 중입니다. 2초 뒤 다시 눌러주세요.");
         state.ocrEnabled = false;
         return;
       }
@@ -1704,8 +1693,8 @@
         if (!state.ocrWorker) {
           state.ocrWorker = await Tesseract.createWorker("eng");
           await state.ocrWorker.setParameters({
-            tessedit_char_whitelist: "0123456789.-",
-            tessedit_pageseg_mode: "7"
+            tessedit_char_whitelist: "0123456789", // TM-902C는 숫자만 완벽히 읽어내면 계산으로 소수점 복원 가능
+            tessedit_pageseg_mode: "7" // [핵심] 단일 텍스트 라인 모드. 7세그먼트 줄바꿈/쪼개짐 파편화 원천 차단
           });
         }
         document.getElementById("ocrStatusLabel").textContent = "인식 스캔 중";
@@ -1713,6 +1702,55 @@
       } catch (e) {
         document.getElementById("ocrStatusLabel").textContent = "OCR 초기화 실패";
       }
+    }
+    
+    // TM-902C 7-Segment 전용 픽셀 팽창(Dilation) 이진화 필터
+    function apply7SegmentDilation(ctx, width, height) {
+      var imgData = ctx.getImageData(0, 0, width, height);
+      var data = imgData.data;
+      var bin = new Uint8Array(width * height);
+      var sum = 0;
+      
+      for (var i = 0; i < data.length; i += 4) {
+        var luma = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
+        data[i] = data[i+1] = data[i+2] = luma;
+        sum += luma;
+      }
+      var threshold = (sum / (width * height)) * 0.85; // 어두운 액정 폰트 검출
+      
+      for (var i = 0; i < data.length; i += 4) {
+        bin[i/4] = data[i] < threshold ? 1 : 0; // 1=검은글자, 0=흰배경
+      }
+      
+      // 팽창(Dilation): 7세그먼트의 끊어진 틈(Gap)을 강제로 이어붙여 일반 폰트처럼 만듦
+      for (var y = 1; y < height - 1; y++) {
+        for (var x = 1; x < width - 1; x++) {
+          var idx = y * width + x;
+          var p = idx * 4;
+          if (bin[idx] === 0) {
+            if (bin[idx-1] === 1 || bin[idx+1] === 1 || bin[idx-width] === 1 || bin[idx+width] === 1) {
+              data[p] = data[p+1] = data[p+2] = 0; // 이웃이 글자면 나도 글자(검은색)로 변환
+            } else {
+              data[p] = data[p+1] = data[p+2] = 255; // 아니면 완벽한 흰색
+            }
+          } else {
+            data[p] = data[p+1] = data[p+2] = 0;
+          }
+        }
+      }
+      ctx.putImageData(imgData, 0, 0);
+    }
+    
+    // 잔상(Ghosting) 방지를 위한 프레임 정지(Stability) 감지기
+    var lastFrameLuma = null;
+    function isFrameStable(ctx, width, height) {
+      var data = ctx.getImageData(width/2 - 20, height/2 - 20, 40, 40).data;
+      if (!lastFrameLuma) { lastFrameLuma = data; return false; }
+      var diff = 0;
+      for (var i=0; i<data.length; i+=4) { diff += Math.abs(data[i] - lastFrameLuma[i]); }
+      lastFrameLuma = data;
+      // 픽셀 변화량이 크면(>12) 액정이 다음 숫자로 넘어가는 잔상 상태이므로 스킵
+      return (diff / (40*40)) < 12.0; 
     }
 
     async function runOCRLoop() {
@@ -1730,54 +1768,27 @@
             var sx = (video.videoWidth - cropW) / 2;
             var sy = (video.videoHeight - cropH) / 2;
 
-            
-            canvas.width = 400;
-            canvas.height = 180;
+            canvas.width = 300; // 해상도를 낮춰 처리 속도 대폭 향상 (어차피 팽창 처리함)
+            canvas.height = 120;
             var ctx = canvas.getContext("2d", { willReadFrequently: true });
             
-            // Draw original cropped region
             ctx.drawImage(video, sx, sy, cropW, cropH, 0, 0, canvas.width, canvas.height);
             
-            // Advanced 7-segment Binarization & Thickening
-            var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            var data = imgData.data;
-            
-            // 1. Grayscale and Adaptive Thresholding
-            var avgLuma = 0;
-            for (var i = 0; i < data.length; i += 4) {
-                var luma = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-                data[i] = data[i+1] = data[i+2] = luma;
-                avgLuma += luma;
-            }
-            avgLuma /= (data.length / 4);
-            var threshold = avgLuma * 0.85; // Slightly aggressive threshold to catch thin LCD segments
-            
-            for (var i = 0; i < data.length; i += 4) {
-                var luma = data[i];
-                // TM-902C has dark text on light background. Make text black (0), background white (255)
-                var v = luma < threshold ? 0 : 255; 
-                data[i] = data[i+1] = data[i+2] = v;
-            }
-            ctx.putImageData(imgData, 0, 0);
-            
-            // 2. Thickening (Dilation) to connect 7-segment gaps
-            // Tesseract struggles with disconnected segments. We draw strokes over the black pixels.
-            // A simple CSS blur or JS convolution is too heavy. 
-            // Better: use ctx.filter = 'blur(1px)' and draw again, but let's just rely on PSM 7 and binarization first, 
-            // as pure B&W with PSM 7 usually drastically fixes the issue.
-
-
-            var res = await state.ocrWorker.recognize(canvas);
-            var temp = extractTemperatureFromText(res.data.text);
-            if (temp !== null) {
-              ingestOCRValue(temp);
+            // 1) 액정이 바뀌고 있는 잔상 타이밍에는 Tesseract를 아예 안 돌림 (쓰레기값 원천차단)
+            if (isFrameStable(ctx, canvas.width, canvas.height)) {
+                // 2) 7세그먼트 틈새 이어붙이기 특수 필터 적용
+                apply7SegmentDilation(ctx, canvas.width, canvas.height);
+                
+                var res = await state.ocrWorker.recognize(canvas);
+                var temp = extractTemperatureFromText(res.data.text);
+                if (temp !== null) ingestOCRValue(temp);
             }
           }
         } catch (e) {}
         state.ocrBusy = false;
       }
       if (state.ocrEnabled) {
-        setTimeout(runOCRLoop, 280);
+        setTimeout(runOCRLoop, 180); // 180ms 주기로 스캔 (스냅샷 안정기 포착 확률 증가)
       }
     }
 
@@ -1788,7 +1799,6 @@
       document.getElementById("stallBanner").classList.remove("active");
     }
 
-    // =========================================================================
     // 5. 열선 노브, 마일스톤 & 홀드 배출
     // =========================================================================
     function adjustGas(delta) {
