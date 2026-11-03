@@ -139,6 +139,7 @@
     .pill-btn.copper { color: var(--copper-light); }
     .pill-btn.profile { color: var(--profile); border-color: rgba(163, 140, 250, 0.35); }
     .pill-btn.amber { background: var(--amber); color: #000; }
+    .pill-btn.mint { background: var(--mint); color: #000; }
     .pill-btn:disabled { opacity: 0.4; pointer-events: none; }
 
     /* OCR 정체 배너 */
@@ -178,7 +179,7 @@
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       min-height: 0;
     }
 
@@ -300,7 +301,7 @@
 
     /* 우측 히어로 온도 카드 */
     .hero-card {
-      padding: 10px 12px;
+      padding: 8px 12px;
       border-color: rgba(242, 128, 46, 0.35);
     }
 
@@ -317,22 +318,22 @@
     }
 
     .hero-bt {
-      font-size: 40px;
+      font-size: 34px;
       font-weight: 900;
       color: var(--copper-light);
       line-height: 1.05;
     }
 
     .hero-ror {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 900;
       color: var(--teal);
       line-height: 1.1;
     }
 
     .hero-guidance {
-      margin-top: 5px;
-      padding-top: 5px;
+      margin-top: 4px;
+      padding-top: 4px;
       border-top: 1px solid var(--border);
       display: none;
       justify-content: space-between;
@@ -348,7 +349,7 @@
     }
 
     .mini-box {
-      padding: 7px 8px;
+      padding: 6px 8px;
     }
 
     .mini-label {
@@ -358,17 +359,17 @@
     }
 
     .mini-val {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
-      margin-top: 2px;
+      margin-top: 1px;
     }
 
     /* 열선 노브 카드 */
     .heater-card {
-      padding: 7px 10px;
+      padding: 6px 10px;
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
 
     .heater-header {
@@ -396,8 +397,8 @@
     }
 
     .step-btn {
-      width: 46px;
-      height: 32px;
+      width: 48px;
+      height: 30px;
       background: var(--card-alt);
       color: #fff;
       border: 1px solid var(--border);
@@ -419,7 +420,7 @@
     .camera-row {
       display: flex;
       gap: 6px;
-      height: 110px;
+      height: 88px;
     }
 
     .camera-box {
@@ -443,8 +444,8 @@
 
     .roi-guide {
       position: absolute;
-      width: 68%;
-      height: 46%;
+      width: 48%;
+      height: 36%;
       border: 1.5px dashed rgba(250, 194, 56, 0.85);
       border-radius: 6px;
       pointer-events: none;
@@ -453,8 +454,8 @@
 
     .zoom-pills {
       position: absolute;
-      top: 5px;
-      left: 5px;
+      top: 4px;
+      left: 4px;
       display: flex;
       gap: 3px;
       z-index: 2;
@@ -474,8 +475,8 @@
 
     .ocr-badge {
       position: absolute;
-      bottom: 5px;
-      left: 5px;
+      bottom: 4px;
+      left: 4px;
       background: rgba(0,0,0,0.72);
       padding: 2px 7px;
       border-radius: 999px;
@@ -488,7 +489,7 @@
     }
 
     .cam-side-btns {
-      width: 92px;
+      width: 90px;
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -506,17 +507,16 @@
     }
     .cam-btn.active-mint { background: rgba(56, 219, 148, 0.22); color: var(--mint); }
     .cam-btn.active-amber { background: rgba(250, 194, 56, 0.25); color: var(--amber); }
-    .cam-btn.copper { color: var(--copper-light); }
 
     /* 마일스톤 이벤트 버튼 */
     .milestone-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 6px;
     }
 
     .mile-btn {
-      padding: 10px 4px;
+      padding: 8px 4px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
       font-size: 11px;
@@ -525,7 +525,6 @@
       transition: transform 0.1s;
     }
     .mile-btn:active { transform: scale(0.96); }
-    .mile-btn.charge { background: var(--card-alt); color: #fff; }
     .mile-btn.yellow { background: #E0C752; color: #000; }
     .mile-btn.crack { background: var(--copper); color: #fff; }
     .mile-btn.marked {
@@ -536,8 +535,9 @@
 
     /* 하단 시작 & 1.0초 홀드 배출 바 */
     .action-bar-wrap {
-      height: 44px;
+      height: 40px;
       position: relative;
+      flex-shrink: 0;
     }
 
     .start-btn {
@@ -546,8 +546,8 @@
       background: var(--mint);
       color: #000;
       border: none;
-      border-radius: 12px;
-      font-size: 14px;
+      border-radius: 10px;
+      font-size: 13px;
       font-weight: 900;
       cursor: pointer;
     }
@@ -557,7 +557,7 @@
       height: 100%;
       background: rgba(242, 79, 84, 0.18);
       border: 1.5px solid rgba(242, 79, 84, 0.55);
-      border-radius: 12px;
+      border-radius: 10px;
       position: relative;
       overflow: hidden;
       display: none;
@@ -591,16 +591,115 @@
       height: 100%;
     }
 
+    /* 우측 하단 인라인 온도 입력 키패드 */
+    .inline-keypad-card {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border-color: rgba(242, 128, 46, 0.28);
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .inline-keypad-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .inline-keypad-display {
+      flex: 1;
+      background: var(--card-alt);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: 900;
+      color: var(--copper-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .inline-keypad-display .label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-sec);
+    }
+
+    .quick-temp-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .quick-chip {
+      background: rgba(242, 128, 46, 0.12);
+      color: var(--copper-light);
+      border: 1px solid rgba(242, 128, 46, 0.3);
+      border-radius: 6px;
+      padding: 4px 0;
+      font-size: 10px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+    }
+    .quick-chip:active {
+      background: var(--copper);
+      color: #fff;
+    }
+
+    .inline-keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 5px;
+      flex: 1;
+    }
+
+    .key-btn {
+      background: var(--card-alt);
+      color: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 0;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.08s, background 0.08s;
+    }
+    .key-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .key-btn.ent {
+      background: var(--copper);
+      color: #fff;
+      font-size: 13px;
+      grid-row: span 2;
+    }
+    .key-btn.sub-action {
+      font-size: 12px;
+      color: var(--text-sec);
+    }
+    .key-btn.clear-btn {
+      font-size: 12px;
+      color: var(--red);
+    }
+
     /* 모달 공통 */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(0, 0, 0, 0.76);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 100;
-      padding: 16px;
+      padding: 14px;
     }
     .modal-backdrop.open { display: flex; }
 
@@ -611,7 +710,7 @@
       padding: 16px;
       width: 100%;
       max-width: 420px;
-      max-height: 90dvh;
+      max-height: 92dvh;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -667,25 +766,58 @@
       color: #fff;
     }
 
-    .keypad-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
+    /* 리포트 모달 (라이트 테마 프리뷰 + 파일 저장 액션바) */
+    .report-modal-panel {
+      max-width: 860px;
+      background: #181B22;
+      border: 1px solid rgba(255,255,255,0.18);
     }
 
-    .key-btn {
-      background: var(--card-alt);
-      color: #fff;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      padding: 11px 0;
-      font-size: 18px;
+    .report-preview-scroll {
+      background: #E2E8F0;
+      border-radius: 12px;
+      padding: 10px;
+      max-height: 68dvh;
+      overflow-y: auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    #generatedReportImg {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      display: block;
+    }
+
+    .report-action-bar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .report-action-btn {
+      flex: 1;
+      min-width: 160px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 800;
+      border: none;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.1s, opacity 0.1s;
     }
-    .key-btn.ent { background: var(--copper); }
+    .report-action-btn:active { transform: scale(0.97); }
+    .report-action-btn.primary { background: var(--amber); color: #000; }
+    .report-action-btn.secondary { background: var(--mint); color: #000; }
+    .report-action-btn.tertiary { background: var(--card-alt); color: #fff; border: 1px solid var(--border); }
 
-    /* 아이폰/모바일 화면 최적화 (스크롤 최소화 및 컴팩트 배치) */
+    /* 아이폰/모바일 화면 최적화 */
     @media (max-width: 820px) {
       body {
         overflow-y: auto;
@@ -698,99 +830,34 @@
         gap: 6px;
         padding-top: 2px;
       }
-      .brand-badge {
-        padding: 4px 8px;
-      }
-      .timer-hero {
-        font-size: 20px;
-      }
-      .pill-btn {
-        padding: 5px 9px;
-        font-size: 11px;
-      }
-      .workspace {
-        flex-direction: column;
-        gap: 6px;
-      }
-      .right-col {
-        width: 100%;
-        gap: 6px;
-      }
-      .left-col {
-        gap: 6px;
-      }
-      .phase-bar {
-        gap: 4px;
-      }
-      .phase-pill {
-        padding: 5px 8px;
-      }
-      .chart-card {
-        min-height: 190px;
-        padding: 6px;
-      }
-      .chart-container {
-        min-height: 150px;
-      }
-      .log-card {
-        height: 85px;
-      }
-      .hero-card {
-        padding: 8px 10px;
-      }
-      .hero-bt {
-        font-size: 32px;
-      }
-      .hero-ror {
-        font-size: 20px;
-      }
-      .sub-metrics {
-        gap: 4px;
-      }
-      .mini-box {
-        padding: 5px 6px;
-      }
-      .mini-val {
-        font-size: 14px;
-      }
-      .heater-card {
-        padding: 6px 8px;
-        gap: 4px;
-      }
-      .step-btn {
-        width: 40px;
-        height: 28px;
-        font-size: 11px;
-      }
-      .camera-row {
-        height: 90px;
-        gap: 4px;
-      }
-      .cam-side-btns {
-        width: 80px;
-        gap: 3px;
-      }
-      .cam-btn {
-        font-size: 9px;
-      }
-      .milestone-row {
-        gap: 4px;
-      }
-      .mile-btn {
-        padding: 8px 2px;
-        font-size: 10px;
-      }
-      .action-bar-wrap {
-        height: 38px;
-      }
-      .start-btn {
-        font-size: 13px;
-        border-radius: 9px;
-      }
-      .hold-drop-bar {
-        border-radius: 9px;
-        font-size: 11px;
-      }
+      .brand-badge { padding: 4px 8px; }
+      .timer-hero { font-size: 20px; }
+      .pill-btn { padding: 5px 9px; font-size: 11px; }
+      .workspace { flex-direction: column; gap: 6px; }
+      .right-col { width: 100%; gap: 6px; }
+      .left-col { gap: 6px; }
+      .phase-bar { gap: 4px; }
+      .phase-pill { padding: 5px 8px; }
+      .chart-card { min-height: 190px; padding: 6px; }
+      .chart-container { min-height: 150px; }
+      .log-card { height: 85px; }
+      .hero-card { padding: 8px 10px; }
+      .hero-bt { font-size: 30px; }
+      .hero-ror { font-size: 19px; }
+      .sub-metrics { gap: 4px; }
+      .mini-box { padding: 5px 6px; }
+      .mini-val { font-size: 14px; }
+      .heater-card { padding: 6px 8px; gap: 4px; }
+      .step-btn { width: 44px; height: 28px; font-size: 11px; }
+      .camera-row { height: 82px; gap: 4px; }
+      .cam-side-btns { width: 82px; gap: 3px; }
+      .cam-btn { font-size: 9px; }
+      .milestone-row { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+      .mile-btn { padding: 8px 2px; font-size: 10px; }
+      .action-bar-wrap { height: 38px; }
+      .start-btn { font-size: 13px; border-radius: 9px; }
+      .hold-drop-bar { border-radius: 9px; font-size: 11px; }
+      .key-btn { padding: 8px 0; font-size: 15px; }
     }
   </style>
 </head>
@@ -808,7 +875,7 @@
 
     <div class="timer-hero mono">
       <span id="timerDisplay">00:00</span>
-      <button id="pauseBtn" type="button" class="pill-btn" style="display:none; padding:4px 8px; font-size:10px;" onclick="confirmPause()">일시정지</button>
+      <button id="pauseBtn" type="button" class="pill-btn" style="display:none; padding:4px 8px; font-size:10px;" onclick="toggleRoastTimer()">일시정지</button>
     </div>
 
     <span id="headerLossBadge" class="pill-btn mono" style="display:none; color:var(--amber);">손실률 0.0%</span>
@@ -818,8 +885,8 @@
     <button type="button" class="pill-btn profile" onclick="openModal('profileModal')">📈 프로파일 <span id="profileActiveBadge"></span></button>
     <button type="button" class="pill-btn copper" id="beanBtnLabel" onclick="openModal('beanModal')">🌱 생두 정보</button>
     <button type="button" class="pill-btn copper" onclick="openModal('notesModal')">📝 메모</button>
-    <button type="button" class="pill-btn" id="exportBtn" onclick="openReportPreview()" disabled>📤 리포트</button>
-    <button type="button" class="pill-btn" onclick="confirmReset()">↺</button>
+    <button type="button" class="pill-btn amber" id="exportBtn" onclick="openReportPreview()" disabled>📊 리포트 · 저장</button>
+    <button type="button" class="pill-btn" onclick="openModal('resetModal')">↺</button>
   </header>
 
   <!-- OCR 정체 경고 배너 -->
@@ -829,7 +896,7 @@
     <button type="button" class="pill-btn" style="background:var(--red); padding:4px 10px; font-size:11px;" onclick="forceSyncOCR()">강제 동기화 · 리셋</button>
   </div>
 
-  <!-- 메인 워크스페이스 (반응형: 아이패드 2단 / 아이폰 1단 스택) -->
+  <!-- 메인 워크스페이스 -->
   <main class="workspace">
     <!-- 좌측: 3단계 구간 바 + 차트 + 로그 테이블 -->
     <section class="left-col">
@@ -884,13 +951,13 @@
       </div>
     </section>
 
-    <!-- 우측: 히어로 계측판 + 노브 제어 + 카메라 OCR + 마일스톤 & 홀드 배출 -->
+    <!-- 우측: 히어로 계측판 + 노브 제어(4.0~8.0, ±0.1) + 카메라 OCR + 마일스톤 & 홀드 배출 + 인라인 온도 키패드 -->
     <aside class="right-col">
       <div class="card hero-card">
         <div class="hero-top">
           <div>
             <div class="hero-label mono">CHAMBER BT (K-TYPE)</div>
-            <div class="mono"><span id="heroBT" class="hero-bt">--.-</span> <span style="font-size:16px; color:var(--text-sec); font-weight:700;">℃</span></div>
+            <div class="mono"><span id="heroBT" class="hero-bt">--.-</span> <span style="font-size:15px; color:var(--text-sec); font-weight:700;">℃</span></div>
           </div>
           <div style="text-align:right;">
             <div class="hero-label mono">LIVE RoR</div>
@@ -918,20 +985,21 @@
         </div>
       </div>
 
+      <!-- 1 & 2. 열선 노브 최소 4.0 ~ 최대 8.0, 화력조절 버튼 ±0.1 단위 -->
       <div class="card heater-card">
         <div class="heater-header mono">
-          <span>🔥 열선 노브 (HEATER KNOB)</span>
+          <span>🔥 열선 노브 (4.0 ~ 8.0단)</span>
           <span class="fan-badge">FAN: FULL 100%</span>
         </div>
         <div class="heater-controls">
-          <button type="button" class="step-btn mono" onclick="adjustGas(-0.5)">-0.5</button>
-          <input id="gasSlider" type="range" class="heater-slider" min="0" max="7" step="0.5" value="3.5" oninput="onGasSliderChange(this.value)" />
-          <button type="button" class="step-btn plus mono" onclick="adjustGas(0.5)">+0.5</button>
-          <span id="gasValLabel" class="mono" style="font-size:15px; font-weight:900; color:var(--copper-light); width:46px; text-align:right;">3.5단</span>
+          <button type="button" class="step-btn mono" onclick="adjustGas(-0.1)">-0.1</button>
+          <input id="gasSlider" type="range" class="heater-slider" min="4.0" max="8.0" step="0.1" value="6.0" oninput="onGasSliderChange(this.value)" />
+          <button type="button" class="step-btn plus mono" onclick="adjustGas(0.1)">+0.1</button>
+          <span id="gasValLabel" class="mono" style="font-size:15px; font-weight:900; color:var(--copper-light); width:46px; text-align:right;">6.0단</span>
         </div>
       </div>
 
-      <!-- 카메라 & OCR 박스 -->
+      <!-- 카메라 & OCR 박스 (직접입력 팝업 버튼 제거됨) -->
       <div class="camera-row">
         <div class="camera-box">
           <video id="cameraVideo" playsinline autoplay muted></video>
@@ -951,13 +1019,11 @@
         <div class="cam-side-btns">
           <button id="camToggleBtn" type="button" class="cam-btn" onclick="toggleCamera()">📷 카메라 켬</button>
           <button id="ocrToggleBtn" type="button" class="cam-btn" onclick="toggleOCR()" disabled>🔍 OCR 켜기</button>
-          <button id="manualKeyBtn" type="button" class="cam-btn copper" onclick="openModal('keypadModal')">⌨️ 직접 입력</button>
         </div>
       </div>
 
       <!-- 마일스톤 버튼 -->
       <div class="milestone-row">
-        <button id="btnCharge" type="button" class="mile-btn charge" onclick="handleMilestone('투입')">투입 (Charge)</button>
         <button id="btnYellow" type="button" class="mile-btn yellow" onclick="handleMilestone('옐로우')">옐로우</button>
         <button id="btnCrack" type="button" class="mile-btn crack" onclick="handleMilestone('1차 크랙')">1차 팝 (Crack)</button>
       </div>
@@ -972,50 +1038,52 @@
         </div>
 
         <div id="afterDropRow" class="after-drop-row">
-          <button id="weightModalBtn" type="button" class="pill-btn amber" style="flex:1; justify-content:center; border-radius:12px;" onclick="openModal('weightModal')">⚖️ 쿨링 후 원두 무게 입력</button>
-          <button id="undoDropBtn" type="button" class="pill-btn" style="color:var(--red); border-radius:12px;" onclick="undoDrop()">배출 취소</button>
+          <button id="weightModalBtn" type="button" class="pill-btn amber" style="flex:1; justify-content:center; border-radius:10px;" onclick="openModal('weightModal')">⚖️ 쿨링 후 원두 무게 입력</button>
+          <button id="undoDropBtn" type="button" class="pill-btn" style="color:var(--red); border-radius:10px;" onclick="undoDrop()">배출 취소</button>
+        </div>
+      </div>
+
+      <!-- 3. 로스팅 시작/배출 버튼 아래 공백에 바로 온도 입력할 수 있는 인라인 숫자 키패드 -->
+      <div class="card inline-keypad-card">
+        <div class="inline-keypad-top">
+          <div class="inline-keypad-display mono">
+            <span class="label">직접 온도 입력</span>
+            <span id="keypadDisplay">--- ℃</span>
+          </div>
+        </div>
+
+        <div class="quick-temp-row mono">
+          <button type="button" class="quick-chip" onclick="quickRecordTemp(195)">195℃</button>
+          <button type="button" class="quick-chip" onclick="quickRecordTemp(200)">200℃</button>
+          <button type="button" class="quick-chip" onclick="quickRecordTemp(205)">205℃</button>
+          <button type="button" class="quick-chip" onclick="quickRecordTemp(210)">210℃</button>
+          <button type="button" class="quick-chip" onclick="quickRecordTemp(215)">215℃</button>
+        </div>
+
+        <div class="inline-keypad-grid mono">
+          <button type="button" class="key-btn" onclick="pressKey('7')">7</button>
+          <button type="button" class="key-btn" onclick="pressKey('8')">8</button>
+          <button type="button" class="key-btn" onclick="pressKey('9')">9</button>
+          <button type="button" class="key-btn sub-action" onclick="pressKey('DEL')">⌫</button>
+
+          <button type="button" class="key-btn" onclick="pressKey('4')">4</button>
+          <button type="button" class="key-btn" onclick="pressKey('5')">5</button>
+          <button type="button" class="key-btn" onclick="pressKey('6')">6</button>
+          <button type="button" class="key-btn clear-btn" onclick="pressKey('C')">지움</button>
+
+          <button type="button" class="key-btn" onclick="pressKey('1')">1</button>
+          <button type="button" class="key-btn" onclick="pressKey('2')">2</button>
+          <button type="button" class="key-btn" onclick="pressKey('3')">3</button>
+          <button type="button" class="key-btn ent" onclick="pressKey('ENT')">기록<br/>↵</button>
+
+          <button type="button" class="key-btn" style="grid-column: span 2;" onclick="pressKey('0')">0</button>
+          <button type="button" class="key-btn" onclick="pressKey('.')">.</button>
         </div>
       </div>
     </aside>
   </main>
 
-  <!-- 1. 수동 온도 입력 모달 -->
-  <div id="keypadModal" class="modal-backdrop">
-    <div class="modal-panel" style="max-width:320px;">
-      <div class="modal-header">
-        <span>챔버 온도 직접 입력</span>
-        <button type="button" class="close-btn" onclick="closeModal('keypadModal')">✕</button>
-      </div>
-      <div id="keypadDisplay" class="mono" style="background:var(--card-alt); padding:8px; border-radius:10px; font-size:26px; font-weight:900; text-align:center; color:var(--copper-light);">--- ℃</div>
-      <div style="display:flex; gap:4px;">
-        <button type="button" class="chip mono" style="flex:1; padding:5px 0;" onclick="quickRecordTemp(195)">195℃</button>
-        <button type="button" class="chip mono" style="flex:1; padding:5px 0;" onclick="quickRecordTemp(200)">200℃</button>
-        <button type="button" class="chip mono" style="flex:1; padding:5px 0;" onclick="quickRecordTemp(205)">205℃</button>
-        <button type="button" class="chip mono" style="flex:1; padding:5px 0;" onclick="quickRecordTemp(210)">210℃</button>
-        <button type="button" class="chip mono" style="flex:1; padding:5px 0;" onclick="quickRecordTemp(215)">215℃</button>
-      </div>
-      <div class="keypad-grid mono">
-        <button type="button" class="key-btn" onclick="pressKey('1')">1</button>
-        <button type="button" class="key-btn" onclick="pressKey('2')">2</button>
-        <button type="button" class="key-btn" onclick="pressKey('3')">3</button>
-        <button type="button" class="key-btn" onclick="pressKey('4')">4</button>
-        <button type="button" class="key-btn" onclick="pressKey('5')">5</button>
-        <button type="button" class="key-btn" onclick="pressKey('6')">6</button>
-        <button type="button" class="key-btn" onclick="pressKey('7')">7</button>
-        <button type="button" class="key-btn" onclick="pressKey('8')">8</button>
-        <button type="button" class="key-btn" onclick="pressKey('9')">9</button>
-        <button type="button" class="key-btn" onclick="pressKey('.')">.</button>
-        <button type="button" class="key-btn" onclick="pressKey('0')">0</button>
-        <button type="button" class="key-btn ent" onclick="pressKey('ENT')">입력 ↵</button>
-      </div>
-      <div style="display:flex; gap:6px;">
-        <button type="button" class="pill-btn" style="flex:1; justify-content:center; color:var(--red);" onclick="pressKey('C')">전체 지우기</button>
-        <button type="button" class="pill-btn" style="flex:1; justify-content:center;" onclick="pressKey('DEL')">⌫ 삭제</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. 프로파일 설정 & 프리셋 & CSV 모달 -->
+  <!-- 프로파일 설정 & 프리셋 & CSV 모달 -->
   <div id="profileModal" class="modal-backdrop">
     <div class="modal-panel" style="max-width:520px;">
       <div class="modal-header">
@@ -1047,7 +1115,7 @@
     </div>
   </div>
 
-  <!-- 3. 생두 정보 모달 -->
+  <!-- 생두 정보 모달 -->
   <div id="beanModal" class="modal-backdrop">
     <div class="modal-panel">
       <div class="modal-header">
@@ -1077,7 +1145,7 @@
     </div>
   </div>
 
-  <!-- 4. 로스터 메모 모달 -->
+  <!-- 로스터 메모 모달 -->
   <div id="notesModal" class="modal-backdrop">
     <div class="modal-panel">
       <div class="modal-header">
@@ -1097,38 +1165,66 @@
     </div>
   </div>
 
-  <!-- 5. 배출 후 원두 무게 입력 모달 -->
+  <!-- 배출 후 원두 무게 입력 모달 -->
   <div id="weightModal" class="modal-backdrop">
     <div class="modal-panel" style="max-width:360px; text-align:center;">
       <div class="modal-header">
         <span>배출 완료 · 쿨링 후 무게 계량</span>
         <button type="button" class="close-btn" onclick="closeModal('weightModal')">✕</button>
       </div>
-      <div style="font-size:13px; color:var(--text-sec);">쿨링이 끝난 원두 무게(g)를 입력하면 손실률이 자동 계산됩니다.</div>
+      <div style="font-size:13px; color:var(--text-sec);">쿨링이 끝난 원두 무게(g)를 입력하면 수분 손실률이 자동 계산됩니다.</div>
       <input id="finalWeightInput" type="number" step="0.1" class="input-field mono" style="font-size:28px; font-weight:900; text-align:center; color:var(--copper-light);" placeholder="0.0 g" oninput="previewWeightLoss()" />
-      <div id="lossPreviewBox" class="mono" style="font-size:16px; font-weight:800; color:var(--amber);"></div>
-      <button type="button" class="pill-btn amber" style="justify-content:center; padding:12px;" onclick="saveFinalWeightAndReport()">완료 및 리포트 생성</button>
+      <div id="lossPreviewBox" class="mono" style="font-size:15px; font-weight:800; color:var(--amber);"></div>
+      <button type="button" class="pill-btn amber" style="justify-content:center; padding:12px;" onclick="saveFinalWeightAndReport()">완료 및 분석 리포트 생성</button>
     </div>
   </div>
 
-  <!-- 6. 리포트 이미지 저장/공유 모달 -->
-  <div id="reportModal" class="modal-backdrop">
-    <div class="modal-panel" style="max-width:680px;">
+  <!-- 초기화 확인 모달 -->
+  <div id="resetModal" class="modal-backdrop">
+    <div class="modal-panel" style="max-width:340px; text-align:center;">
       <div class="modal-header">
-        <span>로스팅 리포트 이미지</span>
+        <span>로스팅 기록 초기화</span>
+        <button type="button" class="close-btn" onclick="closeModal('resetModal')">✕</button>
+      </div>
+      <div style="font-size:13px; color:var(--text-sec); line-height:1.5;">새 로스팅을 시작하시겠습니까?<br/>현재 측정된 타이머와 온도 기록이 초기화됩니다.</div>
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <button type="button" class="pill-btn" style="flex:1; justify-content:center; padding:11px;" onclick="closeModal('resetModal')">취소</button>
+        <button type="button" class="pill-btn" style="flex:1; justify-content:center; padding:11px; background:var(--red); color:#fff;" onclick="executeReset()">초기화 실행</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 밝은 테마 로스팅 분석 리포트 & 파일 다운로드 모달 -->
+  <div id="reportModal" class="modal-backdrop">
+    <div class="modal-panel report-modal-panel">
+      <div class="modal-header">
+        <span>📋 로스팅 종합 분석 리포트 (Light Theme)</span>
         <button type="button" class="close-btn" onclick="closeModal('reportModal')">✕</button>
       </div>
-      <div style="font-size:12px; color:var(--text-sec);">아래 이미지를 길게 눌러 [사진에 저장]하거나 [이미지 다운로드/공유] 버튼을 누르세요.</div>
-      <img id="generatedReportImg" style="width:100%; border-radius:12px; border:1px solid var(--border);" alt="Roast Report" />
-      <div style="display:flex; gap:8px;">
-        <a id="downloadReportLink" class="pill-btn amber" style="flex:1; justify-content:center; text-decoration:none;" download="roast-report.png">💾 이미지 저장 / 공유</a>
+      <div style="font-size:12px; color:var(--text-sec);">
+        주요 지점 온도 콜아웃이 표시된 대형 그래프와 생두/수분손실률/DEV 분석 리포트입니다. 아래 저장 버튼으로 이미지(.png) 또는 데이터(.csv) 파일을 즉시 다운로드할 수 있습니다.
+      </div>
+      <div class="report-preview-scroll">
+        <canvas id="reportRenderCanvas" style="display:none;"></canvas>
+        <img id="generatedReportImg" alt="Roast Analysis Report" />
+      </div>
+      <div class="report-action-bar">
+        <button type="button" class="report-action-btn primary" onclick="downloadReportImageFile()">
+          💾 리포트 이미지 파일 저장 (.PNG)
+        </button>
+        <button type="button" class="report-action-btn secondary" onclick="downloadRoastCSVFile()">
+          📊 상세 로그 파일 저장 (.CSV)
+        </button>
+        <button type="button" id="shareReportBtn" class="report-action-btn tertiary" onclick="shareReportFile()">
+          📤 공유 / 사진첩 저장
+        </button>
       </div>
     </div>
   </div>
 
   <script>
     // =========================================================================
-    // 1. 상태 관리
+    // 1. 상태 관리 (열선 노브 초기값 6.0, 범위 4.0~8.0)
     // =========================================================================
     function safeLoadProfile() {
       try {
@@ -1150,7 +1246,7 @@
       isRunning: false,
       timerId: null,
       startTimeMs: null,
-      gas: 3.5,
+      gas: 6.0,
       btBuffer: "",
       logs: [],
       chargeSec: null,
@@ -1171,7 +1267,9 @@
       ocrBusy: false,
       recentReadings: [],
       lastEmitTime: 0,
-      lastAcceptedTime: Date.now()
+      lastAcceptedTime: Date.now(),
+      lastReportBlob: null,
+      lastReportDataUrl: null
     };
 
     var PRESETS = {
@@ -1195,6 +1293,15 @@
       return String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
     }
 
+    function getRoastLevelName(v) {
+      var val = parseFloat(v) || 3.0;
+      if (val <= 1.8) return "약배전 (Light)";
+      if (val <= 2.6) return "중약배전 (Medium-Light)";
+      if (val <= 3.4) return "중배전 (Medium)";
+      if (val <= 4.2) return "중강배전 (Medium-Dark)";
+      return "강배전 (Dark)";
+    }
+
     async function requestWakeLock() {
       if ("wakeLock" in navigator) {
         try { await navigator.wakeLock.request("screen"); } catch (e) {}
@@ -1202,7 +1309,7 @@
     }
 
     // =========================================================================
-    // 2. 차트 엔진 (현재 시간 플레이헤드선 + BT + RoR + 프로파일)
+    // 2. 실시간 차트 엔진 (BT + RoR + 프로파일 + 현재 시간선)
     // =========================================================================
     var chart = null;
 
@@ -1336,7 +1443,6 @@
         ctx.fillText(String(yv), 6, y + 3);
       });
 
-      // 200도 기준 점선
       ctx.save();
       ctx.setLineDash([4, 4]);
       ctx.strokeStyle = "rgba(255,255,255,0.18)";
@@ -1346,7 +1452,6 @@
       ctx.stroke();
       ctx.restore();
 
-      // 프로파일
       if (state.profilePoints.length > 0) {
         ctx.save();
         ctx.setLineDash([6, 4]);
@@ -1361,7 +1466,6 @@
         ctx.restore();
       }
 
-      // RoR
       if (state.logs.length > 1) {
         ctx.strokeStyle = "#33D1E0";
         ctx.lineWidth = 1.5;
@@ -1373,7 +1477,6 @@
         ctx.stroke();
       }
 
-      // BT
       if (state.logs.length > 0) {
         ctx.strokeStyle = "#FFA352";
         ctx.lineWidth = 3;
@@ -1385,7 +1488,6 @@
         ctx.stroke();
       }
 
-      // 현재 시각 플레이헤드선
       if (state.seconds > 0) {
         ctx.save();
         ctx.setLineDash([2, 2]);
@@ -1422,7 +1524,6 @@
       chart.options.scales.x.max = maxX;
       chart.data.datasets[3].data = [{ x: 0, y: 200 }, { x: maxX, y: 200 }];
 
-      // 실시간 플레이헤드 데이터 갱신
       if (state.seconds > 0) {
         chart.data.datasets[4].data = [{ x: state.seconds, y: 0 }, { x: state.seconds, y: 260 }];
       } else {
@@ -1442,17 +1543,17 @@
         clearInterval(state.timerId);
         state.isRunning = false;
       } else {
+        var isFirstStart = (state.seconds === 0 && state.logs.length === 0);
         state.startTimeMs = Date.now() - state.seconds * 1000;
         state.timerId = setInterval(tick, 1000);
         state.isRunning = true;
+
+        if (isFirstStart) {
+          state.chargeSec = 0;
+          recordData("투입");
+        }
       }
       updateUI();
-    }
-
-    function confirmPause() {
-      if (confirm("로스팅 타이머를 일시정지하시겠습니까?")) {
-        toggleRoastTimer();
-      }
     }
 
     function tick() {
@@ -1513,7 +1614,7 @@
     function recordData(event, explicitBT) {
       if (typeof event === "undefined") event = "";
       if (typeof explicitBT === "undefined") explicitBT = null;
-      if (!state.isRunning && state.seconds === 0) {
+      if (!state.isRunning && state.seconds === 0 && event !== "투입") {
         toggleRoastTimer();
       }
       var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : 0;
@@ -1531,27 +1632,22 @@
       });
       state.currentRoR = ror;
       state.btBuffer = "";
+      var disp = document.getElementById("keypadDisplay");
+      if (disp) disp.textContent = "--- ℃";
       updateChart();
       updateUI();
     }
 
     // =========================================================================
-    
-    // =========================================================================
     // 4. TM-902C 전용 하드웨어 맞춤형 OCR (7-Segment Dilation & Sync)
     // =========================================================================
-    // TM-902C 특성 완벽 반영: 
-    // 1. 200도 미만은 반드시 소수점 1자리. (예: 116.0)
-    // 2. 200도 이상은 반드시 소수점 없는 정수 3자리. (예: 202)
     function extractTemperatureFromText(text) {
-      // Tesseract가 뱉은 결과에서 오직 숫자만 추출 (7세그먼트 단절로 인한 찌꺼기 문자 제거)
-      var s = text.replace(/[^\d]/g, ""); 
+      var s = text.replace(/[^\d]/g, "");
       if (!s) return null;
 
       var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : null;
       var highTempContext = (lastBT !== null && lastBT >= 150.0) || state.seconds >= 50 || state.yellowSec !== null || state.firstCrackSec !== null;
 
-      // 1) 고온 구간 (TM-902C는 200도 이상에서 무조건 3자리 정수로 전환됨)
       if (highTempContext && s.length === 3) {
         var intVal = parseFloat(s);
         if (intVal >= 175 && intVal <= 260) {
@@ -1559,18 +1655,11 @@
         }
       }
 
-      // 2) 저온/일반 구간 (무조건 10으로 나누어 소수점 1자리로 강제 보정)
-      // Tesseract가 소수점을 인식하든 말든 글자(3~4자리)만 읽어오면 하드웨어 스펙에 맞춰 수학적으로 찍어버림.
-      // 예: "1160" -> 116.0℃, "254" -> 25.4℃
       if (s.length >= 3 && s.length <= 4) {
         var decVal = parseFloat(s) / 10.0;
-        
-        // 200도 부근에서 "202"가 들어왔을 때, 고온 문맥이 아니면 20.2로 오인될 수 있음.
-        // 이때 직전 온도가 190도대 였다면 20.2가 아니라 202 정수임을 교차 검증.
         if (lastBT !== null && Math.abs(parseFloat(s) - lastBT) < Math.abs(decVal - lastBT) && parseFloat(s) >= 175 && parseFloat(s) <= 260) {
-            return parseFloat(s);
+          return parseFloat(s);
         }
-
         if (decVal >= 12 && decVal <= 260) return decVal;
       }
 
@@ -1638,7 +1727,7 @@
       }
 
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("카메라 기능은 사파리(Safari) 주소창에서 https:// 주소로 접속했을 때만 작동합니다.");
+        document.getElementById("ocrStatusLabel").textContent = "HTTPS 환경 필요";
         return;
       }
 
@@ -1654,7 +1743,7 @@
         ocrBtn.disabled = false;
         document.getElementById("ocrStatusLabel").textContent = "OCR 대기 중";
       } catch (err) {
-        alert("설정 > Safari > 카메라 권한을 허용해주세요.");
+        document.getElementById("ocrStatusLabel").textContent = "카메라 권한 확인";
       }
     }
 
@@ -1679,7 +1768,7 @@
       }
 
       if (typeof window.Tesseract === "undefined") {
-        alert("엔진 로드 중입니다. 2초 뒤 다시 눌러주세요.");
+        document.getElementById("ocrStatusLabel").textContent = "엔진 로드 중...";
         state.ocrEnabled = false;
         return;
       }
@@ -1693,8 +1782,8 @@
         if (!state.ocrWorker) {
           state.ocrWorker = await Tesseract.createWorker("eng");
           await state.ocrWorker.setParameters({
-            tessedit_char_whitelist: "0123456789", // TM-902C는 숫자만 완벽히 읽어내면 계산으로 소수점 복원 가능
-            tessedit_pageseg_mode: "7" // [핵심] 단일 텍스트 라인 모드. 7세그먼트 줄바꿈/쪼개짐 파편화 원천 차단
+            tessedit_char_whitelist: "0123456789",
+            tessedit_pageseg_mode: "7"
           });
         }
         document.getElementById("ocrStatusLabel").textContent = "인식 스캔 중";
@@ -1703,35 +1792,33 @@
         document.getElementById("ocrStatusLabel").textContent = "OCR 초기화 실패";
       }
     }
-    
-    // TM-902C 7-Segment 전용 픽셀 팽창(Dilation) 이진화 필터
+
     function apply7SegmentDilation(ctx, width, height) {
       var imgData = ctx.getImageData(0, 0, width, height);
       var data = imgData.data;
       var bin = new Uint8Array(width * height);
       var sum = 0;
-      
+
       for (var i = 0; i < data.length; i += 4) {
         var luma = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
         data[i] = data[i+1] = data[i+2] = luma;
         sum += luma;
       }
-      var threshold = (sum / (width * height)) * 0.85; // 어두운 액정 폰트 검출
-      
-      for (var i = 0; i < data.length; i += 4) {
-        bin[i/4] = data[i] < threshold ? 1 : 0; // 1=검은글자, 0=흰배경
+      var threshold = (sum / (width * height)) * 0.85;
+
+      for (var j = 0; j < data.length; j += 4) {
+        bin[j/4] = data[j] < threshold ? 1 : 0;
       }
-      
-      // 팽창(Dilation): 7세그먼트의 끊어진 틈(Gap)을 강제로 이어붙여 일반 폰트처럼 만듦
+
       for (var y = 1; y < height - 1; y++) {
         for (var x = 1; x < width - 1; x++) {
           var idx = y * width + x;
           var p = idx * 4;
           if (bin[idx] === 0) {
             if (bin[idx-1] === 1 || bin[idx+1] === 1 || bin[idx-width] === 1 || bin[idx+width] === 1) {
-              data[p] = data[p+1] = data[p+2] = 0; // 이웃이 글자면 나도 글자(검은색)로 변환
+              data[p] = data[p+1] = data[p+2] = 0;
             } else {
-              data[p] = data[p+1] = data[p+2] = 255; // 아니면 완벽한 흰색
+              data[p] = data[p+1] = data[p+2] = 255;
             }
           } else {
             data[p] = data[p+1] = data[p+2] = 0;
@@ -1740,17 +1827,15 @@
       }
       ctx.putImageData(imgData, 0, 0);
     }
-    
-    // 잔상(Ghosting) 방지를 위한 프레임 정지(Stability) 감지기
+
     var lastFrameLuma = null;
     function isFrameStable(ctx, width, height) {
       var data = ctx.getImageData(width/2 - 20, height/2 - 20, 40, 40).data;
       if (!lastFrameLuma) { lastFrameLuma = data; return false; }
       var diff = 0;
-      for (var i=0; i<data.length; i+=4) { diff += Math.abs(data[i] - lastFrameLuma[i]); }
+      for (var i = 0; i < data.length; i += 4) { diff += Math.abs(data[i] - lastFrameLuma[i]); }
       lastFrameLuma = data;
-      // 픽셀 변화량이 크면(>12) 액정이 다음 숫자로 넘어가는 잔상 상태이므로 스킵
-      return (diff / (40*40)) < 12.0; 
+      return (diff / (40*40)) < 12.0;
     }
 
     async function runOCRLoop() {
@@ -1763,32 +1848,29 @@
           if (video.videoWidth > 0) {
             var vw = video.videoWidth / state.zoomLevel;
             var vh = video.videoHeight / state.zoomLevel;
-            var cropW = vw * 0.68;
-            var cropH = vh * 0.46;
+            var cropW = vw * 0.48;
+            var cropH = vh * 0.36;
             var sx = (video.videoWidth - cropW) / 2;
             var sy = (video.videoHeight - cropH) / 2;
 
-            canvas.width = 300; // 해상도를 낮춰 처리 속도 대폭 향상 (어차피 팽창 처리함)
+            canvas.width = 300;
             canvas.height = 120;
             var ctx = canvas.getContext("2d", { willReadFrequently: true });
-            
+
             ctx.drawImage(video, sx, sy, cropW, cropH, 0, 0, canvas.width, canvas.height);
-            
-            // 1) 액정이 바뀌고 있는 잔상 타이밍에는 Tesseract를 아예 안 돌림 (쓰레기값 원천차단)
+
             if (isFrameStable(ctx, canvas.width, canvas.height)) {
-                // 2) 7세그먼트 틈새 이어붙이기 특수 필터 적용
-                apply7SegmentDilation(ctx, canvas.width, canvas.height);
-                
-                var res = await state.ocrWorker.recognize(canvas);
-                var temp = extractTemperatureFromText(res.data.text);
-                if (temp !== null) ingestOCRValue(temp);
+              apply7SegmentDilation(ctx, canvas.width, canvas.height);
+              var res = await state.ocrWorker.recognize(canvas);
+              var temp = extractTemperatureFromText(res.data.text);
+              if (temp !== null) ingestOCRValue(temp);
             }
           }
         } catch (e) {}
         state.ocrBusy = false;
       }
       if (state.ocrEnabled) {
-        setTimeout(runOCRLoop, 180); // 180ms 주기로 스캔 (스냅샷 안정기 포착 확률 증가)
+        setTimeout(runOCRLoop, 180);
       }
     }
 
@@ -1799,48 +1881,37 @@
       document.getElementById("stallBanner").classList.remove("active");
     }
 
-    // 5. 열선 노브, 마일스톤 & 홀드 배출
+    // =========================================================================
+    // 5. 열선 노브 (4.0 ~ 8.0, ±0.1 단위), 마일스톤 & 홀드 배출
     // =========================================================================
     function adjustGas(delta) {
       if (state.isDropped) return;
-      state.gas = Math.min(7.0, Math.max(0.0, Math.round((state.gas + delta) * 2) / 2));
-      document.getElementById("gasSlider").value = state.gas;
+      state.gas = Math.min(8.0, Math.max(4.0, Math.round((state.gas + delta) * 10) / 10));
+      document.getElementById("gasSlider").value = state.gas.toFixed(1);
       document.getElementById("gasValLabel").textContent = state.gas.toFixed(1) + "단";
     }
 
     function onGasSliderChange(val) {
-      state.gas = parseFloat(val);
+      var parsed = parseFloat(val);
+      if (isNaN(parsed)) parsed = 6.0;
+      state.gas = Math.min(8.0, Math.max(4.0, Math.round(parsed * 10) / 10));
       document.getElementById("gasValLabel").textContent = state.gas.toFixed(1) + "단";
     }
 
     function handleMilestone(type) {
       if (state.isDropped) return;
-      if (type === "투입") {
-        if (state.chargeSec !== null) {
-          if (confirm("투입 기록을 취소하시겠습니까?")) {
-            state.chargeSec = null;
-            removeEventLog("투입");
-          }
-          return;
-        }
-        state.chargeSec = state.seconds;
-        recordData("투입");
-      } else if (type === "옐로우") {
+      if (type === "옐로우") {
         if (state.yellowSec !== null) {
-          if (confirm("옐로우 기록을 취소하시겠습니까?")) {
-            state.yellowSec = null;
-            removeEventLog("옐로우");
-          }
+          state.yellowSec = null;
+          removeEventLog("옐로우");
           return;
         }
         state.yellowSec = state.seconds;
         recordData("옐로우");
       } else if (type === "1차 크랙") {
         if (state.firstCrackSec !== null) {
-          if (confirm("1차 팝 기록을 취소하시겠습니까?")) {
-            state.firstCrackSec = null;
-            removeEventLog("1차 크랙");
-          }
+          state.firstCrackSec = null;
+          removeEventLog("1차 크랙");
           return;
         }
         state.firstCrackSec = state.seconds;
@@ -2015,10 +2086,6 @@
       document.getElementById("devPhaseTime").textContent = formatTime(devS);
       document.getElementById("devPhasePct").textContent = ((devS / total) * 100).toFixed(1) + "%";
 
-      var bCharge = document.getElementById("btnCharge");
-      bCharge.textContent = state.chargeSec !== null ? "✓ 투입됨" : "투입 (Charge)";
-      bCharge.classList.toggle("marked", state.chargeSec !== null);
-
       var bYellow = document.getElementById("btnYellow");
       bYellow.textContent = state.yellowSec !== null ? "✓ 옐로우" : "옐로우";
       bYellow.classList.toggle("marked", state.yellowSec !== null);
@@ -2062,28 +2129,35 @@
     }
 
     // =========================================================================
-    // 7. 모달 관리 및 리포트 캡처
+    // 7. 인라인 온도 키패드 & 모달 제어
     // =========================================================================
     function openModal(id) { document.getElementById(id).classList.add("open"); }
     function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
     function pressKey(k) {
-      if (k === "C") state.btBuffer = "";
-      else if (k === "DEL") state.btBuffer = state.btBuffer.slice(0, -1);
-      else if (k === ".") {
+      if (k === "C") {
+        state.btBuffer = "";
+      } else if (k === "DEL") {
+        state.btBuffer = state.btBuffer.slice(0, -1);
+      } else if (k === ".") {
         if (state.btBuffer.indexOf(".") === -1 && state.btBuffer.length > 0) state.btBuffer += ".";
       } else if (k === "ENT") {
         if (state.btBuffer) {
           state.allowNextJump = true;
           recordData();
-          closeModal("keypadModal");
         }
       } else {
-        state.btBuffer += k;
+        if (state.btBuffer.length < 5) {
+          state.btBuffer += k;
+        }
+        // 정수 3자리(예: 185, 204) 입력 시 즉시 자동 기록 지원
         if (state.btBuffer.indexOf(".") === -1 && state.btBuffer.length === 3) {
-          state.allowNextJump = true;
-          recordData();
-          closeModal("keypadModal");
+          var val = parseFloat(state.btBuffer);
+          if (val >= 100 && val <= 260) {
+            state.allowNextJump = true;
+            recordData();
+            return;
+          }
         }
       }
       document.getElementById("keypadDisplay").textContent = (state.btBuffer || "---") + " ℃";
@@ -2092,7 +2166,6 @@
     function quickRecordTemp(val) {
       state.allowNextJump = true;
       recordData("", val);
-      closeModal("keypadModal");
     }
 
     function saveProfileToStorage() {
@@ -2161,8 +2234,6 @@
         if (pts.length > 0) {
           state.profilePoints = pts;
           saveProfileToStorage();
-        } else {
-          alert("유효한 (시간,온도) 행을 찾지 못했습니다.");
         }
       };
       reader.readAsText(file);
@@ -2186,13 +2257,7 @@
 
     function updateRoastLevelLabel(val) {
       var v = parseFloat(val);
-      var name = "중배전";
-      if (v <= 1.8) name = "약배전";
-      else if (v <= 2.6) name = "중약배전";
-      else if (v <= 3.4) name = "중배전";
-      else if (v <= 4.2) name = "중강배전";
-      else name = "강배전";
-      document.getElementById("roastLevelText").textContent = name + " (" + v.toFixed(1) + ")";
+      document.getElementById("roastLevelText").textContent = getRoastLevelName(v) + " (" + v.toFixed(1) + ")";
     }
 
     function saveBeanInfo() {
@@ -2215,9 +2280,9 @@
       if (state.beanInfo.chargeWeight && w > 0 && w <= state.beanInfo.chargeWeight) {
         var lossG = state.beanInfo.chargeWeight - w;
         var lossPct = (lossG / state.beanInfo.chargeWeight) * 100;
-        box.textContent = "손실량 " + lossG.toFixed(1) + "g · 손실률 " + lossPct.toFixed(1) + "%";
+        box.textContent = "감량 " + lossG.toFixed(1) + "g · 수분 손실률 " + lossPct.toFixed(1) + "%";
       } else {
-        box.textContent = state.beanInfo.chargeWeight ? "" : "투입량 미입력 (생두 정보에서 투입량을 입력하면 손실률이 계산됩니다)";
+        box.textContent = state.beanInfo.chargeWeight ? "" : "투입량 미입력 (생두 정보에서 투입량을 입력하면 수분 손실률이 계산됩니다)";
       }
     }
 
@@ -2238,23 +2303,14 @@
       openReportPreview();
     }
 
-    async function openReportPreview() {
-      if (typeof window.html2canvas !== "undefined") {
-        var canvas = await html2canvas(document.body, { backgroundColor: "#0B0C0F", scale: 2 });
-        var dataUrl = canvas.toDataURL("image/png");
-        document.getElementById("generatedReportImg").src = dataUrl;
-        document.getElementById("downloadReportLink").href = dataUrl;
-        openModal("reportModal");
-      } else {
-        alert("리포트 캡처 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도하거나 아이패드 스크린샷을 이용해주세요.");
-      }
-    }
-
-    function confirmReset() {
-      if (!confirm("새 로스팅을 시작하시겠습니까? 현재 기록이 모두 삭제됩니다.")) return;
+    function executeReset() {
+      closeModal("resetModal");
       clearInterval(state.timerId);
       state.seconds = 0;
       state.isRunning = false;
+      state.gas = 6.0;
+      document.getElementById("gasSlider").value = "6.0";
+      document.getElementById("gasValLabel").textContent = "6.0단";
       state.logs = [];
       state.chargeSec = null;
       state.yellowSec = null;
@@ -2264,9 +2320,719 @@
       state.isFinished = false;
       state.finalWeight = null;
       state.currentRoR = 0;
+      state.btBuffer = "";
+      document.getElementById("keypadDisplay").textContent = "--- ℃";
       document.getElementById("headerLossBadge").style.display = "none";
       updateChart();
       updateUI();
+    }
+
+    // =========================================================================
+    // 8. 밝은 테마(Light Theme) 고해상도 분석 리포트 렌더러 & 실제 파일 다운로드
+    // =========================================================================
+    function drawRoundedRect(ctx, x, y, w, h, r, fillStyle, strokeStyle, lineWidth) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      if (fillStyle) {
+        ctx.fillStyle = fillStyle;
+        ctx.fill();
+      }
+      if (strokeStyle) {
+        ctx.strokeStyle = strokeStyle;
+        ctx.lineWidth = lineWidth || 1;
+        ctx.stroke();
+      }
+    }
+
+    function getMilestoneLog(eventName, fallbackSec) {
+      for (var i = 0; i < state.logs.length; i++) {
+        if (state.logs[i].event === eventName) return state.logs[i];
+      }
+      if (fallbackSec !== null && fallbackSec !== undefined && state.logs.length > 0) {
+        var best = state.logs[0];
+        for (var j = 0; j < state.logs.length; j++) {
+          if (Math.abs(state.logs[j].sec - fallbackSec) < Math.abs(best.sec - fallbackSec)) {
+            best = state.logs[j];
+          }
+        }
+        return best;
+      }
+      return null;
+    }
+
+    function getGasChangeTimeline() {
+      var changes = [];
+      var lastGas = null;
+      for (var i = 0; i < state.logs.length; i++) {
+        var l = state.logs[i];
+        if (lastGas === null || Math.abs(l.gas - lastGas) >= 0.05) {
+          changes.push({ sec: l.sec, timeStr: l.timeStr, gas: l.gas, bt: l.bt });
+          lastGas = l.gas;
+        }
+      }
+      return changes;
+    }
+
+    function renderLightThemeReportCanvas() {
+      var canvas = document.getElementById("reportRenderCanvas");
+      var W = 1600;
+      var H = 1920;
+      canvas.width = W;
+      canvas.height = H;
+      var ctx = canvas.getContext("2d");
+
+      var fontSans = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Pretendard", sans-serif';
+      var fontMono = 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace';
+
+      // 전체 밝은 배경
+      ctx.fillStyle = "#F8FAFC";
+      ctx.fillRect(0, 0, W, H);
+
+      // 상단 오렌지/앰버 액센트 바
+      var grad = ctx.createLinearGradient(0, 0, W, 0);
+      grad.addColorStop(0, "#EA580C");
+      grad.addColorStop(0.5, "#F97316");
+      grad.addColorStop(1, "#F59E0B");
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, 14);
+
+      // 1. 헤더 영역
+      var now = new Date();
+      var dateStr = now.getFullYear() + "." + String(now.getMonth() + 1).padStart(2, "0") + "." + String(now.getDate()).padStart(2, "0") + " " +
+                    String(now.getHours()).padStart(2, "0") + ":" + String(now.getMinutes()).padStart(2, "0");
+
+      ctx.fillStyle = "#EA580C";
+      ctx.font = "800 18px " + fontMono;
+      ctx.fillText("ROAST STUDIO · POPCORN EDITION — SPECIALTY ROAST REPORT", 56, 62);
+
+      var beanTitle = state.beanInfo.name ? state.beanInfo.name : "스페셜티 싱글오리진 / 블렌드 (생두명 미입력)";
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "900 42px " + fontSans;
+      ctx.fillText(beanTitle, 56, 114);
+
+      var subMeta = "가공방식: " + (state.beanInfo.process || "미지정") + "   |   목표 배전도: " + getRoastLevelName(state.beanInfo.targetLevel) + " (" + state.beanInfo.targetLevel.toFixed(1) + ")";
+      ctx.fillStyle = "#475569";
+      ctx.font = "600 21px " + fontSans;
+      ctx.fillText(subMeta, 56, 150);
+
+      // 우측 상단 일시 배지
+      drawRoundedRect(ctx, W - 360, 48, 304, 72, 16, "#FFFFFF", "#E2E8F0", 2);
+      ctx.fillStyle = "#64748B";
+      ctx.font = "700 14px " + fontMono;
+      ctx.fillText("ROAST DATE & TIME", W - 336, 76);
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "800 22px " + fontMono;
+      ctx.fillText(dateStr, W - 336, 105);
+
+      // 2. 핵심 요약 카드 6개 (생두 투입/배출, 수분손실률, 총 시간, DEV/DTR, 최고/배출온도, 평균 RoR)
+      var effSec = state.isDropped ? (state.dropSec || state.seconds) : (state.logs.length ? state.logs[state.logs.length - 1].sec : state.seconds);
+      var devSec = (state.firstCrackSec !== null && effSec >= state.firstCrackSec) ? (effSec - state.firstCrackSec) : 0;
+      var dtrVal = (state.firstCrackSec !== null && effSec > 0) ? ((devSec / effSec) * 100) : 0;
+
+      var chargeW = state.beanInfo.chargeWeight;
+      var finalW = state.finalWeight;
+      var lossPctStr = "미계량";
+      var lossSubStr = "배출 무게 입력 시 자동 산출";
+      if (chargeW && finalW && finalW <= chargeW) {
+        var lossG = chargeW - finalW;
+        var lossPct = (lossG / chargeW) * 100;
+        lossPctStr = lossPct.toFixed(1) + "%";
+        lossSubStr = "-" + lossG.toFixed(1) + "g 감량 (수분/유기물 손실)";
+      }
+
+      var chargeLog = getMilestoneLog("투입", state.chargeSec !== null ? state.chargeSec : 0) || (state.logs.length ? state.logs[0] : null);
+      var tpLog = getTurningPoint();
+      var yellowLog = getMilestoneLog("옐로우", state.yellowSec);
+      var crackLog = getMilestoneLog("1차 크랙", state.firstCrackSec);
+      var dropLog = getMilestoneLog("배출", state.dropSec) || (state.logs.length ? state.logs[state.logs.length - 1] : null);
+
+      var summaryCards = [
+        {
+          label: "생두 투입 / 원두 배출",
+          val: (chargeW ? chargeW.toFixed(1) + "g" : "- g") + " → " + (finalW ? finalW.toFixed(1) + "g" : "- g"),
+          sub: "투입량 대비 배출량",
+          accent: "#0F172A"
+        },
+        {
+          label: "수분 손실률 (WEIGHT LOSS)",
+          val: lossPctStr,
+          sub: lossSubStr,
+          accent: "#EA580C"
+        },
+        {
+          label: "총 로스팅 시간 (TOTAL TIME)",
+          val: formatTime(effSec),
+          sub: "투입 ~ 배출 총 소요시간",
+          accent: "#0F172A"
+        },
+        {
+          label: "발현 시간 & DTR (DEV RATIO)",
+          val: formatTime(devSec) + " (" + dtrVal.toFixed(1) + "%)",
+          sub: state.firstCrackSec !== null ? ("1차 팝 " + formatTime(state.firstCrackSec) + " 이후 발현") : "1차 팝 미기록",
+          accent: "#D97706"
+        },
+        {
+          label: "투입 온도 → 배출 온도",
+          val: (chargeLog ? chargeLog.bt.toFixed(1) + "℃" : "- ℃") + " → " + (dropLog ? dropLog.bt.toFixed(1) + "℃" : "- ℃"),
+          sub: tpLog ? ("터닝포인트(TP): " + tpLog.bt.toFixed(1) + "℃ @ " + tpLog.timeStr) : "터닝포인트 집계 전",
+          accent: "#2563EB"
+        },
+        {
+          label: "열선 노브 운용 범위",
+          val: (function() {
+            if (!state.logs.length) return state.gas.toFixed(1) + "단";
+            var gases = state.logs.map(function(l) { return l.gas; });
+            var minG = Math.min.apply(null, gases);
+            var maxG = Math.max.apply(null, gases);
+            return minG.toFixed(1) + "단 ~ " + maxG.toFixed(1) + "단";
+          })(),
+          sub: "FAN 풍량 100% 고정 (팝콘 챔버)",
+          accent: "#059669"
+        }
+      ];
+
+      var cardGap = 18;
+      var cardW = (W - 112 - cardGap * 2) / 3;
+      var cardH = 122;
+      summaryCards.forEach(function(c, idx) {
+        var col = idx % 3;
+        var row = Math.floor(idx / 3);
+        var cx = 56 + col * (cardW + cardGap);
+        var cy = 180 + row * (cardH + 16);
+        drawRoundedRect(ctx, cx, cy, cardW, cardH, 16, "#FFFFFF", "#E2E8F0", 2);
+
+        ctx.fillStyle = "#64748B";
+        ctx.font = "800 15px " + fontSans;
+        ctx.fillText(c.label, cx + 22, cy + 34);
+
+        ctx.fillStyle = c.accent;
+        ctx.font = "900 31px " + fontMono;
+        ctx.fillText(c.val, cx + 22, cy + 76);
+
+        ctx.fillStyle = "#94A3B8";
+        ctx.font = "600 14px " + fontSans;
+        ctx.fillText(c.sub, cx + 22, cy + 104);
+      });
+
+      // 3. 3단계 구간 비율 바 (Dry / Maillard / Development)
+      var phaseBoxY = 462;
+      drawRoundedRect(ctx, 56, phaseBoxY, W - 112, 118, 16, "#FFFFFF", "#E2E8F0", 2);
+
+      var totalS = Math.max(effSec, 1);
+      var ySec = state.yellowSec !== null ? state.yellowSec : Math.min(totalS, state.firstCrackSec !== null ? state.firstCrackSec : totalS);
+      var fcSec = state.firstCrackSec !== null ? state.firstCrackSec : totalS;
+      var dryS = Math.max(0, Math.min(ySec, totalS));
+      var mailS = Math.max(0, Math.min(fcSec, totalS) - dryS);
+      var devS = Math.max(0, totalS - Math.max(dryS, Math.min(fcSec, totalS)));
+
+      var dryPct = (dryS / totalS) * 100;
+      var mailPct = (mailS / totalS) * 100;
+      var devPct = (devS / totalS) * 100;
+
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "800 17px " + fontSans;
+      ctx.fillText("로스팅 3단계 구간 비율 (ROAST PHASE BREAKDOWN)", 80, phaseBoxY + 34);
+
+      ctx.font = "700 16px " + fontMono;
+      ctx.fillStyle = "#10B981";
+      ctx.fillText("● DRY (건조): " + formatTime(dryS) + " (" + dryPct.toFixed(1) + "%)", 560, phaseBoxY + 34);
+      ctx.fillStyle = "#D97706";
+      ctx.fillText("● MAILLARD (갈변): " + formatTime(mailS) + " (" + mailPct.toFixed(1) + "%)", 880, phaseBoxY + 34);
+      ctx.fillStyle = "#EA580C";
+      ctx.fillText("● DEV (발현): " + formatTime(devS) + " (" + devPct.toFixed(1) + "%)", 1240, phaseBoxY + 34);
+
+      var barX = 80, barY = phaseBoxY + 54, barW = W - 160, barH = 38;
+      drawRoundedRect(ctx, barX, barY, barW, barH, 10, "#F1F5F9", null, 0);
+
+      var wDry = (dryPct / 100) * barW;
+      var wMail = (mailPct / 100) * barW;
+      var wDev = Math.max(0, barW - wDry - wMail);
+
+      if (wDry > 0) {
+        ctx.fillStyle = "#10B981";
+        ctx.fillRect(barX, barY, wDry, barH);
+      }
+      if (wMail > 0) {
+        ctx.fillStyle = "#F59E0B";
+        ctx.fillRect(barX + wDry, barY, wMail, barH);
+      }
+      if (wDev > 0) {
+        ctx.fillStyle = "#EA580C";
+        ctx.fillRect(barX + wDry + wMail, barY, wDev, barH);
+      }
+
+      // 4. 대형 고해상도 로스팅 그래프 + 주요 마일스톤 온도 콜아웃 뱃지
+      var chartCardY = 602;
+      var chartCardH = 740;
+      drawRoundedRect(ctx, 56, chartCardY, W - 112, chartCardH, 18, "#FFFFFF", "#CBD5E1", 2);
+
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "900 22px " + fontSans;
+      ctx.fillText("로스팅 온도 프로파일 & 주요 마일스톤 콜아웃 (BT · RoR · HEATER KNOB)", 84, chartCardY + 42);
+
+      // 범례
+      ctx.font = "700 15px " + fontSans;
+      ctx.fillStyle = "#EA580C";
+      ctx.fillText("━ 챔버 온도 (BT ℃)", W - 690, chartCardY + 42);
+      ctx.fillStyle = "#0284C7";
+      ctx.fillText("━ 분당 상승률 (RoR ℃/m)", W - 510, chartCardY + 42);
+      ctx.fillStyle = "#7C3AED";
+      ctx.fillText("┅ 목표 프로파일", W - 295, chartCardY + 42);
+      ctx.fillStyle = "#059669";
+      ctx.fillText("▲ 열선 노브(단)", W - 160, chartCardY + 42);
+
+      var padL = 120, padR = 110, padT = chartCardY + 75, padB = chartCardY + chartCardH - 70;
+      var plotW = (W - 56 - padR) - padL;
+      var plotH = padB - padT;
+
+      var maxLogSec = state.logs.length ? state.logs[state.logs.length - 1].sec : 0;
+      var maxProfSec = state.profilePoints.length ? state.profilePoints[state.profilePoints.length - 1].sec : 0;
+      var maxX = Math.max(maxLogSec, maxProfSec, effSec, 240) + 35;
+
+      function xOf(sec) { return padL + (sec / maxX) * plotW; }
+      function yOfTemp(temp) { return padB - (Math.min(Math.max(temp, 0), 260) / 260) * plotH; }
+      function yOfRoR(ror) {
+        var clamped = Math.min(Math.max(ror, -10), 60);
+        return padB - ((clamped + 10) / 70) * plotH;
+      }
+
+      // 배경 구간 음영 (Dry / Maillard / Dev)
+      if (effSec > 0) {
+        ctx.fillStyle = "rgba(16, 185, 129, 0.04)";
+        ctx.fillRect(xOf(0), padT, xOf(dryS) - xOf(0), plotH);
+        if (mailS > 0) {
+          ctx.fillStyle = "rgba(245, 158, 11, 0.05)";
+          ctx.fillRect(xOf(dryS), padT, xOf(dryS + mailS) - xOf(dryS), plotH);
+        }
+        if (devS > 0) {
+          ctx.fillStyle = "rgba(234, 88, 12, 0.06)";
+          ctx.fillRect(xOf(dryS + mailS), padT, xOf(effSec) - xOf(dryS + mailS), plotH);
+        }
+      }
+
+      // 가로 그리드 (온도 0~250℃ & 우측 RoR 축)
+      ctx.lineWidth = 1;
+      [0, 50, 100, 150, 200, 250].forEach(function(tempVal) {
+        var y = yOfTemp(tempVal);
+        ctx.strokeStyle = tempVal === 200 ? "#FCA5A5" : "#E2E8F0";
+        ctx.setLineDash(tempVal === 200 ? [6, 4] : []);
+        ctx.beginPath();
+        ctx.moveTo(padL, y);
+        ctx.lineTo(padL + plotW, y);
+        ctx.stroke();
+
+        ctx.fillStyle = "#475569";
+        ctx.font = "700 15px " + fontMono;
+        ctx.textAlign = "right";
+        ctx.fillText(tempVal + "℃", padL - 12, y + 5);
+      });
+      ctx.setLineDash([]);
+
+      // 우측 RoR 눈금
+      [0, 10, 20, 30, 40, 50].forEach(function(rorVal) {
+        var y = yOfRoR(rorVal);
+        ctx.fillStyle = "#0284C7";
+        ctx.font = "700 14px " + fontMono;
+        ctx.textAlign = "left";
+        ctx.fillText(rorVal + "℃/m", padL + plotW + 12, y + 5);
+      });
+
+      // 세로 시간 그리드 (30초 또는 60초 간격)
+      var stepSec = maxX <= 360 ? 30 : 60;
+      for (var s = 0; s <= maxX; s += stepSec) {
+        var x = xOf(s);
+        ctx.strokeStyle = "#E2E8F0";
+        ctx.beginPath();
+        ctx.moveTo(x, padT);
+        ctx.lineTo(x, padB);
+        ctx.stroke();
+
+        ctx.fillStyle = "#475569";
+        ctx.font = "700 15px " + fontMono;
+        ctx.textAlign = "center";
+        ctx.fillText(formatTime(s), x, padB + 28);
+      }
+      ctx.textAlign = "left";
+
+      // 목표 프로파일 곡선
+      if (state.profilePoints.length > 0) {
+        ctx.save();
+        ctx.setLineDash([8, 6]);
+        ctx.strokeStyle = "rgba(124, 58, 237, 0.75)";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        state.profilePoints.forEach(function(p, idx) {
+          var px = xOf(p.sec), py = yOfTemp(p.temp);
+          if (idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 시간별 중복 제거된 로그
+      var mapBySec = new Map();
+      state.logs.forEach(function(l) { mapBySec.set(l.sec, l); });
+      var deduped = Array.from(mapBySec.values()).sort(function(a, b) { return a.sec - b.sec; });
+
+      // RoR 곡선
+      if (deduped.length > 1) {
+        ctx.save();
+        ctx.strokeStyle = "#0284C7";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        deduped.forEach(function(l, idx) {
+          var rx = xOf(l.sec), ry = yOfRoR(l.ror);
+          if (idx === 0) ctx.moveTo(rx, ry); else ctx.lineTo(rx, ry);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // BT 메인 온도 곡선
+      if (deduped.length > 0) {
+        ctx.save();
+        ctx.strokeStyle = "#EA580C";
+        ctx.lineWidth = 5;
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        deduped.forEach(function(l, idx) {
+          var bx = xOf(l.sec), by = yOfTemp(l.bt);
+          if (idx === 0) ctx.moveTo(bx, by); else ctx.lineTo(bx, by);
+        });
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 열선 노브 변경 마커 (하단 x축 위쪽에 표시)
+      var gasChanges = getGasChangeTimeline();
+      gasChanges.forEach(function(g) {
+        var gx = xOf(g.sec);
+        var gy = padB - 14;
+        drawRoundedRect(ctx, gx - 34, gy - 22, 68, 24, 6, "#ECFDF5", "#059669", 1.5);
+        ctx.fillStyle = "#047857";
+        ctx.font = "800 13px " + fontMono;
+        ctx.textAlign = "center";
+        ctx.fillText("🔥" + g.gas.toFixed(1) + "단", gx, gy - 5);
+      });
+      ctx.textAlign = "left";
+
+      // 주요 마일스톤 지점 콜아웃 뱃지 (투입, TP, 옐로우, 1차 팝, 배출)
+      var callouts = [];
+      if (chargeLog) {
+        callouts.push({ title: "투입 (CHARGE)", log: chargeLog, color: "#334155", bg: "#F1F5F9", dy: -52 });
+      }
+      if (tpLog) {
+        callouts.push({ title: "터닝포인트 (TP)", log: tpLog, color: "#059669", bg: "#ECFDF5", dy: 44 });
+      }
+      if (yellowLog) {
+        callouts.push({ title: "옐로우 (YELLOW)", log: yellowLog, color: "#B45309", bg: "#FEF3C7", dy: -56 });
+      }
+      if (crackLog) {
+        callouts.push({ title: "1차 팝 (1ST CRACK)", log: crackLog, color: "#C2410C", bg: "#FFEDD5", dy: -62 });
+      }
+      if (dropLog && (!chargeLog || dropLog.sec !== chargeLog.sec)) {
+        callouts.push({ title: "배출 (DROP)", log: dropLog, color: "#DC2626", bg: "#FEE2E2", dy: 44 });
+      }
+
+      callouts.forEach(function(c) {
+        var ptX = xOf(c.log.sec);
+        var ptY = yOfTemp(c.log.bt);
+
+        // 수직 가이드 점선
+        ctx.save();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = c.color;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(ptX, ptY);
+        ctx.lineTo(ptX, padB);
+        ctx.stroke();
+        ctx.restore();
+
+        // 포인트 원형 마커
+        ctx.beginPath();
+        ctx.arc(ptX, ptY, 8, 0, Math.PI * 2);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fill();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = c.color;
+        ctx.stroke();
+
+        // 콜아웃 박스 위치 보정 (그래프 좌우 경계 이탈 방지)
+        var boxW = 166, boxH = 52;
+        var boxX = Math.min(Math.max(ptX - boxW / 2, padL + 6), padL + plotW - boxW - 6);
+        var boxY = ptY + (c.dy < 0 ? c.dy - boxH / 2 : c.dy - 10);
+        boxY = Math.min(Math.max(boxY, padT + 8), padB - boxH - 36);
+
+        // 지시선
+        ctx.strokeStyle = c.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(ptX, ptY);
+        ctx.lineTo(boxX + boxW / 2, boxY + boxH / 2);
+        ctx.stroke();
+
+        drawRoundedRect(ctx, boxX, boxY, boxW, boxH, 10, c.bg, c.color, 2);
+        ctx.fillStyle = c.color;
+        ctx.font = "900 13px " + fontSans;
+        ctx.textAlign = "center";
+        ctx.fillText(c.title, boxX + boxW / 2, boxY + 20);
+
+        ctx.fillStyle = "#0F172A";
+        ctx.font = "900 17px " + fontMono;
+        ctx.fillText(c.log.bt.toFixed(1) + "℃ · " + c.log.timeStr, boxX + boxW / 2, boxY + 42);
+      });
+      ctx.textAlign = "left";
+
+      // 5. 하단: 주요 지점 상세 테이블 & 열선 노브 이력 & 로스터 메모
+      var bottomY = 1364;
+      var leftBoxW = 920;
+      var rightBoxW = W - 112 - leftBoxW - 20;
+      var bottomH = 490;
+
+      // 좌측 박스: 마일스톤 상세 요약표 + 열선 노브 조작 타임라인
+      drawRoundedRect(ctx, 56, bottomY, leftBoxW, bottomH, 16, "#FFFFFF", "#E2E8F0", 2);
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "900 20px " + fontSans;
+      ctx.fillText("주요 마일스톤 온도 & 열선 노브(4.0~8.0단) 조작 기록", 82, bottomY + 40);
+
+      var tableHeaders = ["구분 (EVENT)", "시간 (TIME)", "챔버 온도 (BT)", "상승률 (RoR)", "열선 노브 (HEATER)"];
+      var colX = [82, 290, 450, 630, 790];
+      drawRoundedRect(ctx, 74, bottomY + 58, leftBoxW - 36, 38, 8, "#F1F5F9", null, 0);
+      ctx.fillStyle = "#475569";
+      ctx.font = "800 14px " + fontSans;
+      tableHeaders.forEach(function(h, i) {
+        ctx.fillText(h, colX[i], bottomY + 82);
+      });
+
+      var milestoneRows = [
+        { name: "투입 (Charge)", log: chargeLog },
+        { name: "터닝포인트 (TP)", log: tpLog },
+        { name: "옐로우 (Yellow)", log: yellowLog },
+        { name: "1차 팝 (1st Crack)", log: crackLog },
+        { name: "배출 (Drop)", log: dropLog }
+      ];
+
+      milestoneRows.forEach(function(r, idx) {
+        var ry = bottomY + 130 + idx * 44;
+        if (idx > 0) {
+          ctx.strokeStyle = "#F1F5F9";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(74, ry - 28);
+          ctx.lineTo(56 + leftBoxW - 18, ry - 28);
+          ctx.stroke();
+        }
+        ctx.fillStyle = "#0F172A";
+        ctx.font = "800 16px " + fontSans;
+        ctx.fillText(r.name, colX[0], ry);
+
+        ctx.font = "700 16px " + fontMono;
+        ctx.fillStyle = r.log ? "#0F172A" : "#94A3B8";
+        ctx.fillText(r.log ? r.log.timeStr : "-", colX[1], ry);
+        ctx.fillStyle = r.log ? "#EA580C" : "#94A3B8";
+        ctx.fillText(r.log ? (r.log.bt.toFixed(1) + " ℃") : "-", colX[2], ry);
+        ctx.fillStyle = r.log ? "#0284C7" : "#94A3B8";
+        ctx.fillText(r.log ? ((r.log.ror >= 0 ? "+" : "") + r.log.ror.toFixed(1) + " ℃/m") : "-", colX[3], ry);
+        ctx.fillStyle = r.log ? "#059669" : "#94A3B8";
+        ctx.fillText(r.log ? (r.log.gas.toFixed(1) + " 단") : "-", colX[4], ry);
+      });
+
+      // 열선 조작 요약 줄
+      ctx.fillStyle = "#475569";
+      ctx.font = "800 15px " + fontSans;
+      ctx.fillText("🔥 열선 노브 변경 타임라인:", 82, bottomY + 375);
+
+      var gasFlowStr = gasChanges.length
+        ? gasChanges.map(function(g) { return g.timeStr + " [" + g.gas.toFixed(1) + "단 / " + g.bt.toFixed(0) + "℃]"; }).join("  →  ")
+        : "변경 없음 (" + state.gas.toFixed(1) + "단 유지)";
+
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "700 15px " + fontMono;
+      wrapCanvasText(ctx, gasFlowStr, 82, bottomY + 404, leftBoxW - 48, 24, 3);
+
+      // 우측 박스: 로스터 메모 & 커핑 노트
+      var rightBoxX = 56 + leftBoxW + 20;
+      drawRoundedRect(ctx, rightBoxX, bottomY, rightBoxW, bottomH, 16, "#FFFFFF", "#E2E8F0", 2);
+      ctx.fillStyle = "#0F172A";
+      ctx.font = "900 20px " + fontSans;
+      ctx.fillText("로스터 메모 & 커핑 노트 (ROASTER NOTES)", rightBoxX + 26, bottomY + 40);
+
+      var notesVal = document.getElementById("roasterNotesInput").value.trim();
+      if (!notesVal) {
+        notesVal = "작성된 메모가 없습니다.\n\n• 챔버 스월링 및 채프 배출 상태\n• 1차 팝 진행 강도 및 아로마 변화\n• 커핑 노트 (산미, 단맛, 바디감, 애프터테이스트)";
+      }
+      drawRoundedRect(ctx, rightBoxX + 22, bottomY + 60, rightBoxW - 44, bottomH - 86, 12, "#F8FAFC", "#E2E8F0", 1.5);
+      ctx.fillStyle = "#334155";
+      ctx.font = "600 18px " + fontSans;
+      wrapCanvasText(ctx, notesVal, rightBoxX + 42, bottomY + 100, rightBoxW - 84, 30, 11);
+
+      // 하단 푸터
+      ctx.fillStyle = "#94A3B8";
+      ctx.font = "700 14px " + fontMono;
+      ctx.textAlign = "center";
+      ctx.fillText("GENERATED BY ROAST STUDIO · POPCORN EDITION | PRECISION ROASTING ANALYTICS", W / 2, H - 22);
+      ctx.textAlign = "left";
+
+      return canvas;
+    }
+
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, maxLines) {
+      var paragraphs = String(text).split("\n");
+      var lineCount = 0;
+      for (var p = 0; p < paragraphs.length; p++) {
+        var words = paragraphs[p].split("");
+        var line = "";
+        for (var n = 0; n < words.length; n++) {
+          var testLine = line + words[n];
+          var metrics = ctx.measureText(testLine);
+          if (metrics.width > maxWidth && n > 0) {
+            ctx.fillText(line, x, y + lineCount * lineHeight);
+            line = words[n];
+            lineCount++;
+            if (maxLines && lineCount >= maxLines) return;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line, x, y + lineCount * lineHeight);
+        lineCount++;
+        if (maxLines && lineCount >= maxLines) return;
+      }
+    }
+
+    function openReportPreview() {
+      var canvas = renderLightThemeReportCanvas();
+      var dataUrl = canvas.toDataURL("image/png");
+      state.lastReportDataUrl = dataUrl;
+      document.getElementById("generatedReportImg").src = dataUrl;
+
+      canvas.toBlob(function(blob) {
+        state.lastReportBlob = blob;
+      }, "image/png");
+
+      openModal("reportModal");
+    }
+
+    function getReportFileBaseName() {
+      var now = new Date();
+      var d = now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "_" +
+              String(now.getHours()).padStart(2, "0") + String(now.getMinutes()).padStart(2, "0");
+      var beanSlug = (state.beanInfo.name || "popcorn_roast").replace(/[^\w가-힣\-]+/g, "_");
+      return "RoastReport_" + beanSlug + "_" + d;
+    }
+
+    // 실제 파일로 작동하는 PNG 다운로드
+    function downloadReportImageFile() {
+      var canvas = renderLightThemeReportCanvas();
+      var filename = getReportFileBaseName() + ".png";
+
+      if (canvas.toBlob) {
+        canvas.toBlob(function(blob) {
+          if (!blob) return;
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.style.display = "none";
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function() {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }, 1500);
+        }, "image/png");
+      } else {
+        var dataUrl = canvas.toDataURL("image/png");
+        var a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    }
+
+    // 실제 파일로 작동하는 CSV 로그 다운로드 (엑셀 한글 깨짐 방지 UTF-8 BOM 포함)
+    function downloadRoastCSVFile() {
+      var effSec = state.isDropped ? (state.dropSec || state.seconds) : state.seconds;
+      var devSec = (state.firstCrackSec !== null && effSec >= state.firstCrackSec) ? (effSec - state.firstCrackSec) : 0;
+      var dtrVal = (state.firstCrackSec !== null && effSec > 0) ? ((devSec / effSec) * 100) : 0;
+      var chargeW = state.beanInfo.chargeWeight || "";
+      var finalW = state.finalWeight || "";
+      var lossPct = (chargeW && finalW && finalW <= chargeW) ? (((chargeW - finalW) / chargeW) * 100).toFixed(1) + "%" : "";
+
+      var lines = [];
+      lines.push("ROAST STUDIO - POPCORN EDITION LOG REPORT");
+      lines.push("생두명," + (state.beanInfo.name || "미입력"));
+      lines.push("가공방식," + (state.beanInfo.process || "미입력"));
+      lines.push("목표배전도," + getRoastLevelName(state.beanInfo.targetLevel) + " (" + state.beanInfo.targetLevel.toFixed(1) + ")");
+      lines.push("투입량(g)," + chargeW);
+      lines.push("배출량(g)," + finalW);
+      lines.push("수분손실률," + lossPct);
+      lines.push("총로스팅시간," + formatTime(effSec));
+      lines.push("디벨롭타임(DEV)," + formatTime(devSec));
+      lines.push("DTR(%)," + dtrVal.toFixed(1) + "%");
+      lines.push("메모," + '"' + (document.getElementById("roasterNotesInput").value || "").replace(/"/g, '""') + '"');
+      lines.push("");
+      lines.push("경과초(sec),시간(MM:SS),챔버온도_BT(℃),상승률_RoR(℃/m),열선노브(단),이벤트");
+
+      state.logs.forEach(function(l) {
+        lines.push([
+          l.sec,
+          l.timeStr,
+          l.bt.toFixed(1),
+          l.ror.toFixed(1),
+          l.gas.toFixed(1),
+          l.event || ""
+        ].join(","));
+      });
+
+      var csvContent = "\uFEFF" + lines.join("\r\n");
+      var blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = getReportFileBaseName() + ".csv";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 1500);
+    }
+
+    // 모바일/아이패드 네이티브 공유 시트 연동 (미지원 환경에서는 PNG 다운로드 실행)
+    async function shareReportFile() {
+      var canvas = renderLightThemeReportCanvas();
+      var filename = getReportFileBaseName() + ".png";
+
+      canvas.toBlob(async function(blob) {
+        if (!blob) return;
+        var file = new File([blob], filename, { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: "로스팅 분석 리포트",
+              text: (state.beanInfo.name || "팝콘 로스팅") + " 로스팅 리포트",
+              files: [file]
+            });
+            return;
+          } catch (e) {}
+        }
+        downloadReportImageFile();
+      }, "image/png");
     }
 
     window.addEventListener("DOMContentLoaded", function() {
