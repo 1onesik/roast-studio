@@ -2,900 +2,106 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Roast Studio" />
-  <meta name="theme-color" content="#0B0C0F" />
-  <title>ROAST STUDIO · POPCORN EDITION</title>
+  <meta name="theme-color" content="#0A0A0C" />
+  <meta name="color-scheme" content="dark" />
+  <title>Roast Studio · Popcorn</title>
+
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./css/app.css" />
 
   <!-- Chart.js & html2canvas & Tesseract.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
-
-  <style>
-    :root {
-      --bg: #0B0C0F;
-      --card: #14161B;
-      --card-alt: #1F222A;
-      --border: rgba(255, 255, 255, 0.08);
-      --copper: #F2802E;
-      --copper-light: #FFA352;
-      --teal: #33D1E0;
-      --mint: #38DB94;
-      --amber: #FAC238;
-      --red: #F24F54;
-      --profile: #A38CFA;
-      --text: #FFFFFF;
-      --text-sec: #A3A8B3;
-      --text-faint: #6B707B;
-      --radius: 14px;
-      --radius-sm: 9px;
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    /* 전체 높이 100dvh 고정: 스크롤 및 하단 잘림 방지 (아이패드 11인치 대응) */
-    body {
-      margin: 0;
-      padding: env(safe-area-inset-top, 10px) 12px env(safe-area-inset-bottom, 12px) 12px;
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Pretendard", sans-serif;
-      height: 100dvh;
-      max-height: 100dvh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .mono {
-      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-      font-variant-numeric: tabular-nums;
-    }
-
-    button {
-      touch-action: manipulation;
-      font-family: inherit;
-    }
-
-    /* 상단 헤더 (반응형) */
-    .top-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-      flex-wrap: nowrap;
-    }
-
-    .brand-badge {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
-      border-radius: 999px;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-faint);
-    }
-
-    .brand-meta {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-
-    .brand-title {
-      font-size: 9px;
-      font-weight: 800;
-      color: var(--text-faint);
-      letter-spacing: 0.5px;
-    }
-
-    .status-text {
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--text-faint);
-    }
-
-    .timer-hero {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--mint);
-      letter-spacing: -0.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .spacer { flex: 1; }
-
-    .pill-btn {
-      background: var(--card-alt);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.07);
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.1s, opacity 0.1s;
-      white-space: nowrap;
-    }
-    .pill-btn:active { transform: scale(0.96); opacity: 0.75; }
-    .pill-btn.copper { color: var(--copper-light); }
-    .pill-btn.profile { color: var(--profile); border-color: rgba(163, 140, 250, 0.35); }
-    .pill-btn.amber { background: var(--amber); color: #000; }
-    .pill-btn:disabled { opacity: 0.4; pointer-events: none; }
-
-    /* OCR 정체 배너 */
-    .stall-banner {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      background: rgba(242, 79, 84, 0.16);
-      border: 1px solid rgba(242, 79, 84, 0.5);
-      padding: 5px 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-    .stall-banner.active { display: flex; }
-
-    /* 반응형 워크스페이스: 아이패드(가로 2단) 고정 높이 */
-    .workspace {
-      display: flex;
-      gap: 10px;
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .left-col {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 0;
-      min-height: 0; /* 차트 영역 압축 허용 */
-    }
-
-    .right-col {
-      width: 350px; /* 아이패드 맞춤 350px */
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 6px; /* 8px -> 6px 패널 간격 축소 */
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-    }
-
-    /* 3단계 구간 바 */
-    .phase-bar {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .phase-pill {
-      padding: 6px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .phase-label {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--text-sec);
-    }
-
-    .phase-time {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .phase-pct {
-      font-size: 14px;
-      font-weight: 900;
-    }
-
-    /* 차트 영역 */
-    .chart-card {
-      flex: 1;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      position: relative;
-    }
-
-    .chart-container {
-      flex: 1;
-      position: relative;
-      min-height: 0; /* 강제 높이 제한 해제 */
-      width: 100%;
-    }
-
-    #roastChart {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .chart-legend {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 9px;
-      font-weight: 600;
-      color: var(--text-sec);
-      padding: 4px 2px 0 2px;
-      flex-shrink: 0;
-      flex-wrap: wrap;
-    }
-
-    .legend-dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      margin-right: 3px;
-    }
-
-    /* 하단 로그 테이블 */
-    .log-card {
-      height: 88px; /* 110px -> 88px 축소 */
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .log-header {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr auto;
-      background: var(--card-alt);
-      padding: 4px 8px;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-sec);
-      align-items: center;
-      text-align: center;
-    }
-
-    .log-body {
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .log-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr auto;
-      padding: 3px 8px;
-      font-size: 11px;
-      text-align: center;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-    }
-
-    /* 우측 히어로 온도 카드 */
-    .hero-card {
-      padding: 8px 12px; /* 위아래 여백 축소 */
-      border-color: rgba(242, 128, 46, 0.35);
-      flex-shrink: 0;
-    }
-
-    .hero-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .hero-label {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--text-sec);
-    }
-
-    .hero-bt {
-      font-size: 38px;
-      font-weight: 900;
-      color: var(--copper-light);
-      line-height: 1.0; /* 높이 압축 */
-    }
-
-    .hero-ror {
-      font-size: 22px;
-      font-weight: 900;
-      color: var(--teal);
-      line-height: 1.0;
-    }
-
-    .hero-guidance {
-      margin-top: 4px;
-      padding-top: 4px;
-      border-top: 1px solid var(--border);
-      display: none;
-      justify-content: space-between;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    /* 보조 지표 3단 그리드 */
-    .sub-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .mini-box {
-      padding: 5px 8px; /* 패딩 축소 */
-    }
-
-    .mini-label {
-      font-size: 9px;
-      font-weight: 700;
-      color: var(--text-sec);
-    }
-
-    .mini-val {
-      font-size: 15px;
-      font-weight: 800;
-      margin-top: 2px;
-    }
-
-    /* 열선 노브 카드 */
-    .heater-card {
-      padding: 6px 10px; /* 패딩 축소 */
-      display: flex;
-      flex-direction: column;
-      gap: 4px; /* 간격 축소 */
-      flex-shrink: 0;
-    }
-
-    .heater-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-sec);
-    }
-
-    .fan-badge {
-      background: rgba(56, 219, 148, 0.15);
-      color: var(--mint);
-      padding: 2px 6px;
-      border-radius: 999px;
-      font-size: 9px;
-      font-weight: 800;
-    }
-
-    .heater-controls {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .step-btn {
-      width: 44px;
-      height: 28px;
-      background: var(--card-alt);
-      color: #fff;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      font-size: 11px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-    .step-btn.plus { color: var(--copper-light); }
-    .step-btn:active { transform: scale(0.95); }
-
-    input[type="range"].heater-slider {
-      flex: 1;
-      accent-color: var(--copper);
-      height: 6px;
-    }
-
-    /* 카메라 & OCR 영역 */
-    .camera-row {
-      display: flex;
-      gap: 6px;
-      height: 80px; /* 110px -> 80px 축소 */
-      flex-shrink: 0;
-    }
-
-    .camera-box {
-      flex: 1;
-      position: relative;
-      background: #000;
-      border-radius: 12px;
-      border: 1px solid rgba(242, 128, 46, 0.45);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #cameraVideo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform-origin: center center;
-    }
-
-    .roi-guide {
-      position: absolute;
-      width: 48%;
-      height: 40%;
-      border: 1.5px dashed rgba(250, 194, 56, 0.85);
-      border-radius: 6px;
-      pointer-events: none;
-      box-shadow: 0 0 0 999px rgba(0, 0, 0, 0.32);
-    }
-
-    .zoom-pills {
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      display: flex;
-      gap: 3px;
-      z-index: 2;
-    }
-
-    .zoom-btn {
-      background: rgba(0,0,0,0.65);
-      color: #fff;
-      border: none;
-      border-radius: 999px;
-      padding: 2px 6px;
-      font-size: 9px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .zoom-btn.active { background: var(--copper); }
-
-    .ocr-badge {
-      position: absolute;
-      bottom: 4px;
-      left: 4px;
-      background: rgba(0,0,0,0.72);
-      padding: 2px 7px;
-      border-radius: 999px;
-      font-size: 9px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      z-index: 2;
-    }
-
-    .cam-side-btns {
-      width: 86px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .cam-btn {
-      flex: 1;
-      background: var(--card-alt);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      font-size: 10px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .cam-btn.active-mint { background: rgba(56, 219, 148, 0.22); color: var(--mint); }
-    .cam-btn.active-amber { background: rgba(250, 194, 56, 0.25); color: var(--amber); }
-
-    /* 마일스톤 이벤트 버튼 */
-    .milestone-row {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      flex-shrink: 0;
-    }
-
-    .mile-btn {
-      padding: 8px 4px; /* 패딩 축소 */
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.1s;
-    }
-    .mile-btn:active { transform: scale(0.96); }
-    .mile-btn.yellow { background: #E0C752; color: #000; }
-    .mile-btn.crack { background: var(--copper); color: #fff; }
-    .mile-btn.marked {
-      background: var(--card-alt) !important;
-      color: var(--mint) !important;
-      border: 2px solid var(--mint) !important;
-    }
-
-    /* 하단 시작 & 1.0초 홀드 배출 바 */
-    .action-bar-wrap {
-      height: 40px; /* 44px -> 40px 축소 */
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .start-btn {
-      width: 100%;
-      height: 100%;
-      background: var(--mint);
-      color: #000;
-      border: none;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .hold-drop-bar {
-      width: 100%;
-      height: 100%;
-      background: rgba(242, 79, 84, 0.18);
-      border: 1.5px solid rgba(242, 79, 84, 0.55);
-      border-radius: 10px;
-      position: relative;
-      overflow: hidden;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      touch-action: none;
-    }
-
-    .hold-drop-fill {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 0%;
-      background: var(--red);
-    }
-
-    .hold-drop-label {
-      position: relative;
-      z-index: 2;
-      font-size: 12px;
-      font-weight: 900;
-      color: #fff;
-      pointer-events: none;
-    }
-
-    .after-drop-row {
-      display: none;
-      gap: 6px;
-      height: 100%;
-    }
-
-    /* 🔥 [추가 3]: 인라인 숫자 키패드 (남은 높이 꽉 채움) */
-    .inline-keypad-panel {
-      flex: 1; /* 남은 높이 전체 사용 */
-      display: flex;
-      flex-direction: column;
-      gap: 4px; /* 간격 압축 */
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 6px;
-      min-height: 0; /* 넘침 허용 후 압축 */
-    }
-    
-    .inline-keypad-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-sec);
-      padding: 0 2px;
-      flex-shrink: 0;
-    }
-
-    .inline-display-row {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-    }
-    .inline-temp-display {
-      flex: 1;
-      background: var(--card-alt);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      font-weight: 900;
-      color: var(--copper-light);
-    }
-
-    .quick-chip-row {
-      display: flex;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-    .quick-chip {
-      flex: 1;
-      background: var(--card-alt);
-      color: var(--copper-light);
-      border: 1px solid rgba(242, 128, 46, 0.3);
-      border-radius: 6px;
-      padding: 4px 0;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-    }
-    .quick-chip:active { background: var(--copper); color: #fff; }
-
-    .inline-keypad-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr); /* 3행 균등 분배 */
-      gap: 4px;
-      flex: 1; /* 남은 그리드 영역 꽉 채우기 */
-      min-height: 0; /* 압축 허용 */
-    }
-
-    .inline-key-btn {
-      background: var(--card-alt);
-      color: #fff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 15px; /* 폰트 축소 */
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .inline-key-btn:active { transform: scale(0.95); }
-    .inline-key-btn.ent { background: var(--copper); }
-    .inline-key-btn.del { color: var(--red); font-size: 12px; }
-
-
-    /* 모달 공통 */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.72);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
-    }
-    .modal-backdrop.open { display: flex; }
-
-    .modal-panel {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 18px;
-      padding: 16px;
-      width: 100%;
-      max-width: 420px;
-      max-height: 90dvh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 15px;
-      font-weight: 800;
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--text-sec);
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .input-field {
-      width: 100%;
-      background: var(--card-alt);
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 9px 12px;
-      border-radius: 10px;
-      font-size: 14px;
-      user-select: text;
-      -webkit-user-select: text;
-    }
-
-    .chip-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .chip {
-      background: var(--card-alt);
-      color: var(--copper-light);
-      border: 1px solid rgba(242, 128, 46, 0.3);
-      border-radius: 999px;
-      padding: 5px 11px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .chip.selected {
-      background: var(--copper);
-      color: #fff;
-    }
-
-    /* 🔥 [추가 4]: 밝은 테마 리포트 렌더러용 캔버스 래퍼 (숨김 처리) */
-    #reportRendererWrap {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
-      background: #F8FAFC; /* 밝은 테마 */
-      color: #0F172A;
-      width: 1000px; /* 고해상도 고정 너비 */
-      padding: 32px;
-      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif;
-      box-sizing: border-box;
-      z-index: -1;
-    }
-
-    .report-brand-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid #E2E8F0;
-      padding-bottom: 16px;
-      margin-bottom: 24px;
-    }
-    .report-title-box { display: flex; flex-direction: column; }
-    .report-maintitle { font-size: 28px; font-weight: 900; color: #0F172A; letter-spacing: -0.5px; }
-    .report-subtitle { font-size: 14px; font-weight: 700; color: #64748B; margin-top: 4px; }
-    .report-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .report-stat-box {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
-    }
-    .report-stat-label { font-size: 12px; font-weight: 700; color: #64748B; margin-bottom: 6px; }
-    .report-stat-val { font-size: 24px; font-weight: 900; color: #0F172A; }
-    .report-stat-sub { font-size: 12px; font-weight: 600; color: #F97316; margin-top: 4px; }
-    
-    .report-phase-bar-wrap {
-      display: flex;
-      height: 24px;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 24px;
-      background: #E2E8F0;
-    }
-    .report-phase { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #FFF; }
-    
-    .report-chart-container {
-      background: #FFFFFF;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 24px;
-      height: 480px;
-      position: relative;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
-    }
-    
-    .report-memo-box {
-      background: #F1F5F9;
-      border-radius: 12px;
-      padding: 16px;
-      font-size: 14px;
-      color: #334155;
-      line-height: 1.6;
-    }
-
-  </style>
+  <script type="module" src="./js/app.js"></script>
 </head>
 <body>
 
-  <!-- 상단 헤더 -->
+  <!-- Top Toolbar -->
   <header class="top-header">
     <div class="brand-badge">
       <div id="statusDot" class="status-dot"></div>
       <div class="brand-meta">
-        <span class="brand-title mono">ROAST STUDIO · POPCORN</span>
+        <span class="brand-title">Roast Studio</span>
         <span id="statusText" class="status-text">로스팅 대기</span>
       </div>
     </div>
 
     <div class="timer-hero mono">
       <span id="timerDisplay">00:00</span>
-      <button id="pauseBtn" type="button" class="pill-btn" style="display:none; padding:4px 8px; font-size:10px;" onclick="confirmPause()">일시정지</button>
+      <button id="pauseBtn" type="button" class="pill-btn" style="display:none; padding:4px 10px; font-size:11px;" onclick="confirmPause()">일시정지</button>
     </div>
 
-    <span id="headerLossBadge" class="pill-btn mono" style="display:none; color:var(--amber);">손실률 0.0%</span>
+    <span id="headerLossBadge" class="pill-btn mono" style="display:none; color:var(--accent);">손실률 0.0%</span>
 
     <div class="spacer"></div>
 
-    <button type="button" class="pill-btn profile" onclick="openModal('profileModal')">📈 프로파일 <span id="profileActiveBadge"></span></button>
-    <button type="button" class="pill-btn copper" id="beanBtnLabel" onclick="openModal('beanModal')">🌱 생두 정보</button>
-    <button type="button" class="pill-btn copper" onclick="openModal('notesModal')">📝 메모</button>
-    <button type="button" class="pill-btn" id="exportBtn" onclick="generateLightReport()" disabled>📤 리포트</button>
-    <button type="button" class="pill-btn" onclick="confirmReset()">↺</button>
+    <button type="button" class="pill-btn" onclick="openModal('profileModal')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+      <span>프로파일</span>
+      <span id="profileActiveBadge" style="color:var(--profile); font-weight:600;"></span>
+    </button>
+    <button type="button" class="pill-btn" id="beanBtnLabel" onclick="openModal('beanModal')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9Z"/><path d="M12 22c-4.97 0-9-4.03-9-9 4.97 0 9 4.03 9 9Z"/><path d="M12 13V3"/><path d="M12 7c2.5 0 4.5-1.8 4.5-4-2.5 0-4.5 1.8-4.5 4Z"/></svg>
+      <span id="beanBtnText">생두 정보</span>
+    </button>
+    <button type="button" class="pill-btn" onclick="openModal('notesModal')">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      <span>메모</span>
+    </button>
+    <button type="button" class="pill-btn primary" id="exportBtn" onclick="generateLightReport()" disabled>
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="m17 8-5-5-5 5"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg>
+      <span>리포트</span>
+    </button>
+    <button type="button" class="pill-btn" aria-label="초기화" onclick="confirmReset()">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    </button>
   </header>
 
-  <!-- OCR 정체 경고 배너 -->
+  <!-- OCR Stall Banner -->
   <div id="stallBanner" class="stall-banner">
-    <span>⚠️ 온도 인식이 지연 중입니다 — 온도계 각도/초점을 확인하거나 [강제 동기화]를 눌러 즉시 이어서 기록하세요.</span>
+    <svg class="icon" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+    <span>온도 인식이 지연되고 있습니다. 온도계 각도를 확인하거나 동기화를 눌러주세요.</span>
     <div class="spacer"></div>
-    <button type="button" class="pill-btn" style="background:var(--red); padding:4px 10px; font-size:11px;" onclick="forceSyncOCR()">강제 동기화 · 리셋</button>
+    <button type="button" class="pill-btn" style="background:var(--red); color:#fff; border-color:transparent; padding:4px 10px; font-size:11px;" onclick="forceSyncOCR()">강제 동기화</button>
   </div>
 
-  <!-- 메인 워크스페이스 -->
+  <!-- Main Workspace -->
   <main class="workspace">
-    <!-- 좌측: 3단계 구간 바 + 차트 + 로그 테이블 -->
+    <!-- Left Column -->
     <section class="left-col">
-      <div class="phase-bar">
-        <div class="card phase-pill">
-          <div>
-            <div class="phase-label mono">DRY (건조)</div>
-            <div id="dryTime" class="phase-time mono">00:00</div>
+      <div class="card phase-card">
+        <div class="phase-grid">
+          <div class="phase-item">
+            <span class="phase-label"><i class="phase-dot" style="background:var(--green);"></i>Dry 건조</span>
+            <div class="phase-vals mono">
+              <span id="dryTime" class="phase-time">00:00</span>
+              <span id="dryPct" class="phase-pct" style="color:var(--green);">0.0%</span>
+            </div>
           </div>
-          <div id="dryPct" class="phase-pct mono" style="color:var(--mint);">0.0%</div>
+          <div class="phase-item">
+            <span class="phase-label"><i class="phase-dot" style="background:var(--yellow);"></i>Maillard 갈변</span>
+            <div class="phase-vals mono">
+              <span id="mailTime" class="phase-time">00:00</span>
+              <span id="mailPct" class="phase-pct" style="color:var(--yellow);">0.0%</span>
+            </div>
+          </div>
+          <div class="phase-item">
+            <span class="phase-label"><i class="phase-dot" style="background:var(--accent);"></i>Dev 발현</span>
+            <div class="phase-vals mono">
+              <span id="devPhaseTime" class="phase-time">00:00</span>
+              <span id="devPhasePct" class="phase-pct" style="color:var(--accent);">0.0%</span>
+            </div>
+          </div>
         </div>
-        <div class="card phase-pill">
-          <div>
-            <div class="phase-label mono">MAILLARD (갈변)</div>
-            <div id="mailTime" class="phase-time mono">00:00</div>
-          </div>
-          <div id="mailPct" class="phase-pct mono" style="color:#EBC752;">0.0%</div>
-        </div>
-        <div class="card phase-pill">
-          <div>
-            <div class="phase-label mono">DEV / DTR (발현)</div>
-            <div id="devPhaseTime" class="phase-time mono">00:00</div>
-          </div>
-          <div id="devPhasePct" class="phase-pct mono" style="color:var(--amber);">0.0%</div>
+        <div class="phase-progress">
+          <div id="barDry" class="phase-seg" style="background:var(--green); width:100%;"></div>
+          <div id="barMail" class="phase-seg" style="background:var(--yellow); width:0%;"></div>
+          <div id="barDev" class="phase-seg" style="background:var(--accent); width:0%;"></div>
         </div>
       </div>
 
@@ -904,12 +110,12 @@
           <canvas id="roastChart"></canvas>
         </div>
         <div class="chart-legend">
-          <span><i class="legend-dot" style="background:var(--copper-light);"></i>BT (챔버 온도 ℃)</span>
-          <span><i class="legend-dot" style="background:var(--teal);"></i>RoR (분당 상승률 추세)</span>
-          <span><i class="legend-dot" style="background:var(--profile);"></i>목표 프로파일</span>
-          <span><i class="legend-dot" style="background:var(--copper);"></i>현재 시각선</span>
+          <span class="legend-item"><i class="legend-dot" style="background:var(--accent);"></i>BT (챔버 온도)</span>
+          <span class="legend-item"><i class="legend-dot" style="background:var(--ror);"></i>RoR (상승률)</span>
+          <span class="legend-item"><i class="legend-dot" style="background:var(--profile);"></i>목표 프로파일</span>
+          <span class="legend-item"><i class="legend-dot" style="background:rgba(255,255,255,0.4);"></i>현재 시각</span>
           <div class="spacer"></div>
-          <span style="color:var(--text-faint);">200℃ 점선 = 1차 팝 기준선</span>
+          <span style="color:var(--text-muted);">200℃ 점선 · 1차 팝 기준</span>
         </div>
       </div>
 
@@ -918,64 +124,68 @@
           <span>시간</span>
           <span>BT (℃)</span>
           <span>RoR</span>
-          <span>열선 노브</span>
+          <span>열선</span>
           <span>이벤트 / DTR</span>
-          <button id="delLastLogBtn" type="button" class="pill-btn" style="padding:2px 8px; font-size:10px; color:var(--red); visibility:hidden;" onclick="deleteLastLog()">최근 1건 삭제</button>
+          <button id="delLastLogBtn" type="button" style="font-size:11px; color:var(--red); cursor:pointer; visibility:hidden;" onclick="deleteLastLog()">최근 삭제</button>
         </div>
         <div id="logBody" class="log-body mono"></div>
       </div>
     </section>
 
-    <!-- 우측: 히어로 계측판 + 노브 제어 + 카메라 OCR + 인라인 키패드 + 마일스톤 -->
+    <!-- Right Column -->
     <aside class="right-col">
       <div class="card hero-card">
         <div class="hero-top">
           <div>
-            <div class="hero-label mono">CHAMBER BT (K-TYPE)</div>
-            <div class="mono"><span id="heroBT" class="hero-bt">--.-</span> <span style="font-size:16px; color:var(--text-sec); font-weight:700;">℃</span></div>
+            <div class="hero-label">챔버 온도 (K-Type)</div>
+            <div class="hero-bt-wrap mono">
+              <span id="heroBT" class="hero-bt">--.-</span>
+              <span class="hero-unit">℃</span>
+            </div>
           </div>
           <div style="text-align:right;">
-            <div class="hero-label mono">LIVE RoR</div>
-            <div class="mono"><span id="heroRoR" class="hero-ror">+0.0</span> <span style="font-size:10px; color:var(--text-faint);">℃/m</span></div>
+            <div class="hero-label">실시간 RoR</div>
+            <div class="mono">
+              <span id="heroRoR" class="hero-ror">+0.0</span>
+              <span style="font-size:11px; color:var(--text-muted);">℃/m</span>
+            </div>
           </div>
         </div>
         <div id="heroGuidanceRow" class="hero-guidance mono">
           <span id="targetBTLabel" style="color:var(--profile);">목표 --.-℃</span>
-          <span id="heaterGuidanceLabel" style="color:var(--mint);">목표 궤적 비교 대기</span>
+          <span id="heaterGuidanceLabel" style="color:var(--green);">궤적 비교 대기</span>
         </div>
       </div>
 
       <div class="sub-metrics">
         <div class="card mini-box">
-          <div class="mini-label mono">DTR</div>
-          <div id="metricDTR" class="mini-val mono" style="color:var(--amber);">0.0%</div>
+          <div class="mini-label">DTR</div>
+          <div id="metricDTR" class="mini-val mono" style="color:var(--accent);">0.0%</div>
         </div>
         <div class="card mini-box">
-          <div class="mini-label mono">DEV TIME</div>
+          <div class="mini-label">디벨롭</div>
           <div id="metricDevTime" class="mini-val mono">00:00</div>
         </div>
         <div class="card mini-box">
-          <div class="mini-label mono">TP (터닝)</div>
-          <div id="metricTP" class="mini-val mono" style="color:var(--mint);">- ℃</div>
+          <div class="mini-label">터닝 포인트</div>
+          <div id="metricTP" class="mini-val mono" style="color:var(--green);">- ℃</div>
         </div>
       </div>
 
       <div class="card heater-card">
-        <div class="heater-header mono">
-          <span>🔥 열선 노브 (4.0 ~ 8.0단)</span>
-          <span class="fan-badge">FAN: FULL 100%</span>
+        <div class="heater-header">
+          <span>열선 노브 (4.0 – 8.0단)</span>
+          <span class="fan-badge mono">FAN 100%</span>
         </div>
         <div class="heater-controls">
-          <!-- 🔥 [추가 2]: 0.1 단위 변경 -->
           <button type="button" class="step-btn mono" onclick="adjustGas(-0.1)">-0.1</button>
-          <!-- 🔥 [추가 1]: 최소 4.0, 최대 8.0, 기본값 6.0 설정 -->
-          <input id="gasSlider" type="range" class="heater-slider" min="4" max="8" step="0.1" value="6.0" oninput="onGasSliderChange(this.value)" />
+          <input id="gasSlider" type="range" aria-label="열선 노브 단수" class="heater-slider" min="4" max="8" step="0.1" value="6.0" oninput="onGasSliderChange(this.value)" />
           <button type="button" class="step-btn plus mono" onclick="adjustGas(0.1)">+0.1</button>
-          <span id="gasValLabel" class="mono" style="font-size:15px; font-weight:900; color:var(--copper-light); width:46px; text-align:right;">6.0단</span>
+          <span id="gasValLabel" class="mono" style="font-size:15px; font-weight:600; color:var(--accent); width:46px; text-align:right;">6.0단</span>
         </div>
       </div>
 
-      <!-- 카메라 & OCR 박스 -->
+      <!-- Camera & OCR -->
       <div class="camera-row">
         <div class="camera-box">
           <video id="cameraVideo" playsinline autoplay muted></video>
@@ -993,107 +203,135 @@
         </div>
 
         <div class="cam-side-btns">
-          <button id="camToggleBtn" type="button" class="cam-btn" onclick="toggleCamera()">📷 카메라 켬</button>
-          <button id="ocrToggleBtn" type="button" class="cam-btn" onclick="toggleOCR()" disabled>🔍 OCR 켜기</button>
+          <button id="camToggleBtn" type="button" class="cam-btn" onclick="toggleCamera()">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            <span>카메라</span>
+          </button>
+          <button id="ocrToggleBtn" type="button" class="cam-btn" onclick="toggleOCR()" disabled>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 12h10"/></svg>
+            <span>OCR</span>
+          </button>
         </div>
       </div>
 
-      <!-- 마일스톤 버튼 -->
+      <!-- Milestones -->
       <div class="milestone-row">
         <button id="btnYellow" type="button" class="mile-btn yellow" onclick="handleMilestone('옐로우')">옐로우</button>
-        <button id="btnCrack" type="button" class="mile-btn crack" onclick="handleMilestone('1차 크랙')">1차 팝 (Crack)</button>
+        <button id="btnCrack" type="button" class="mile-btn crack" onclick="handleMilestone('1차 크랙')">1차 팝</button>
       </div>
 
-      <!-- 시작 버튼 / 오터치 방지 1초 홀드 배출 바 -->
+      <!-- Start / Hold-to-Drop -->
       <div class="action-bar-wrap">
-        <button id="mainStartBtn" type="button" class="start-btn" onclick="toggleRoastTimer()">▶ 로스팅 시작 (START)</button>
+        <button id="mainStartBtn" type="button" class="start-btn" onclick="toggleRoastTimer()">
+          <svg class="icon" viewBox="0 0 24 24" style="fill:currentColor;"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          <span id="mainStartText">로스팅 시작</span>
+        </button>
 
         <div id="holdDropBar" class="hold-drop-bar">
           <div id="holdDropFill" class="hold-drop-fill"></div>
-          <span id="holdDropLabel" class="hold-drop-label mono">🔒 길게 눌러 배출 (HOLD 1s TO DROP)</span>
+          <span id="holdDropLabel" class="hold-drop-label">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span id="holdDropText">길게 눌러 배출 (1초)</span>
+          </span>
         </div>
 
         <div id="afterDropRow" class="after-drop-row">
-          <button id="weightModalBtn" type="button" class="pill-btn amber" style="flex:1; justify-content:center; border-radius:10px;" onclick="openModal('weightModal')">⚖️ 쿨링 후 원두 무게 입력</button>
-          <button id="undoDropBtn" type="button" class="pill-btn" style="color:var(--red); border-radius:10px;" onclick="undoDrop()">배출 취소</button>
+          <button id="weightModalBtn" type="button" class="pill-btn accent" style="flex:1; justify-content:center; border-radius:var(--radius-ctrl);" onclick="openModal('weightModal')">쿨링 후 무게 입력</button>
+          <button id="undoDropBtn" type="button" class="pill-btn" style="color:var(--red); border-radius:var(--radius-ctrl);" onclick="undoDrop()">취소</button>
         </div>
       </div>
 
-      <!-- 🔥 [추가 3]: 인라인 숫자 키패드 (남은 높이 꽉 채움) -->
-      <div class="inline-keypad-panel">
-        <div class="inline-keypad-header mono">
+      <!-- Inline Keypad -->
+      <div id="inlineKeypadPanel" class="inline-keypad-panel">
+        <div class="inline-keypad-header">
           <span>직접 온도 입력</span>
-          <span id="inlineKeypadDisplay" style="color:var(--copper-light); font-size:14px;">--- ℃</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span id="inlineKeypadDisplay" class="mono" style="color:var(--accent); font-size:14px; font-weight:600; transition:color 150ms ease;">--- ℃</span>
+            <button id="keypadToggleBtn" type="button" class="keypad-toggle-btn" aria-expanded="true" onclick="toggleKeypad()">
+              <span id="keypadToggleText">닫기</span>
+              <svg class="icon chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
         </div>
-        <div class="quick-chip-row mono">
-          <div class="quick-chip" onclick="quickRecordTemp(195)">195℃</div>
-          <div class="quick-chip" onclick="quickRecordTemp(200)">200℃</div>
-          <div class="quick-chip" onclick="quickRecordTemp(205)">205℃</div>
-          <div class="quick-chip" onclick="quickRecordTemp(210)">210℃</div>
-          <div class="quick-chip" onclick="quickRecordTemp(215)">215℃</div>
-        </div>
-        <div class="inline-keypad-grid mono">
-          <button type="button" class="inline-key-btn" onclick="pressKey('7')">7</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('8')">8</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('9')">9</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('4')">4</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('5')">5</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('6')">6</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('1')">1</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('2')">2</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('3')">3</button>
-          <button type="button" class="inline-key-btn del" onclick="pressKey('DEL')">지움</button>
-          <button type="button" class="inline-key-btn" onclick="pressKey('0')">0</button>
-          <button type="button" class="inline-key-btn ent" onclick="pressKey('ENT')">입력</button>
+        <div class="inline-keypad-body">
+          <div class="quick-chip-row mono">
+            <button type="button" class="quick-chip" onclick="quickRecordTemp(195)">195</button>
+            <button type="button" class="quick-chip" onclick="quickRecordTemp(200)">200</button>
+            <button type="button" class="quick-chip" onclick="quickRecordTemp(205)">205</button>
+            <button type="button" class="quick-chip" onclick="quickRecordTemp(210)">210</button>
+            <button type="button" class="quick-chip" onclick="quickRecordTemp(215)">215</button>
+          </div>
+          <div class="inline-keypad-grid mono">
+            <button type="button" class="inline-key-btn" onclick="pressKey('7')">7</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('8')">8</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('9')">9</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('4')">4</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('5')">5</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('6')">6</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('1')">1</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('2')">2</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('3')">3</button>
+            <button type="button" class="inline-key-btn del" onclick="pressKey('DEL')">지움</button>
+            <button type="button" class="inline-key-btn" onclick="pressKey('0')">0</button>
+            <button type="button" class="inline-key-btn ent" onclick="pressKey('ENT')">입력</button>
+          </div>
         </div>
       </div>
     </aside>
   </main>
 
-
-  <!-- 프로파일 설정 모달 -->
-  <div id="profileModal" class="modal-backdrop">
-    <div class="modal-panel" style="max-width:520px;">
+  <!-- Profile Modal -->
+  <dialog id="profileModal" class="modal-dialog" closedby="any" aria-labelledby="profileModalTitle" style="max-width:500px;">
+    <div class="modal-panel">
       <div class="modal-header">
-        <span>목표 로스팅 프로파일 설정</span>
-        <button type="button" class="close-btn" onclick="closeModal('profileModal')">✕</button>
+        <h2 id="profileModalTitle" style="margin:0; font-size:inherit; font-weight:inherit;">목표 로스팅 프로파일</h2>
+        <button type="button" class="close-btn" aria-label="닫기" onclick="closeModal('profileModal')">✕</button>
       </div>
-      <div style="font-size:12px; color:var(--text-sec);">팝콘 로스터 추천 프리셋 불러오기</div>
+      <div style="font-size:12px; color:var(--text-sec);">팝콘 로스터 프리셋</div>
       <div style="display:flex; flex-direction:column; gap:6px;">
-        <button type="button" class="pill-btn profile" onclick="applyPreset('light')">🔥 팝콘 라이트 플로럴 (약~중약배전 · 5분 30초 / 207℃ 배출)</button>
-        <button type="button" class="pill-btn profile" onclick="applyPreset('medium')">🔥 팝콘 미디엄 밸런스 (중배전 · 6분 30초 / 213℃ 배출)</button>
-        <button type="button" class="pill-btn profile" onclick="applyPreset('dark')">🔥 팝콘 바디 & 밀크 베리에이션 (중강배전 · 7분 15초 / 221℃ 배출)</button>
+        <button type="button" class="pill-btn" style="justify-content:space-between; border-radius:10px;" onclick="applyPreset('light')">
+          <span>라이트 플로럴 (약~중약배전)</span>
+          <span class="mono" style="color:var(--text-sec); font-size:12px;">05:30 · 207℃</span>
+        </button>
+        <button type="button" class="pill-btn" style="justify-content:space-between; border-radius:10px;" onclick="applyPreset('medium')">
+          <span>미디엄 밸런스 (중배전)</span>
+          <span class="mono" style="color:var(--text-sec); font-size:12px;">06:30 · 213℃</span>
+        </button>
+        <button type="button" class="pill-btn" style="justify-content:space-between; border-radius:10px;" onclick="applyPreset('dark')">
+          <span>바디 & 밀크 베리에이션 (중강배전)</span>
+          <span class="mono" style="color:var(--text-sec); font-size:12px;">07:15 · 221℃</span>
+        </button>
       </div>
-      <hr style="border-color:var(--border); width:100%;" />
+      <div style="height:1px; background:var(--hairline);"></div>
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:12px; color:var(--text-sec);">CSV 파일 불러오기 (시간,온도)</span>
-        <input type="file" id="csvFileInput" accept=".csv,.txt" style="font-size:12px;" onchange="handleCSVFile(event)" />
+        <span style="font-size:12px; color:var(--text-sec);">CSV 불러오기 (시간, 온도)</span>
+        <input type="file" id="csvFileInput" accept=".csv,.txt" style="font-size:12px; color:var(--text-sec);" onchange="handleCSVFile(event)" />
       </div>
-      <div style="font-size:12px; color:var(--text-sec);">직접 포인트 추가 (예: 01:30 또는 90초, 온도 150℃)</div>
+      <div style="font-size:12px; color:var(--text-sec);">직접 포인트 추가 (예: 01:30 또는 90, 150℃)</div>
       <div style="display:flex; gap:6px;">
-        <input id="profTimeInput" class="input-field mono" placeholder="시간 (예: 02:00 또는 120)" style="flex:1;" />
-        <input id="profTempInput" type="number" class="input-field mono" placeholder="온도 (℃)" style="width:110px;" />
-        <button type="button" class="pill-btn copper" onclick="addProfilePointManual()">+ 추가</button>
+        <input id="profTimeInput" class="input-field mono" placeholder="02:00 또는 120" style="flex:1;" />
+        <input id="profTempInput" type="number" inputmode="decimal" class="input-field mono" placeholder="온도" style="width:100px;" />
+        <button type="button" class="pill-btn" onclick="addProfilePointManual()">추가</button>
       </div>
       <div id="profilePointsList" class="mono" style="max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; font-size:12px;"></div>
       <div style="display:flex; justify-content:space-between;">
-        <button type="button" class="pill-btn" style="color:var(--red);" onclick="clearProfilePoints()">프로파일 전체 삭제</button>
-        <button type="button" class="pill-btn amber" onclick="closeModal('profileModal')">적용 완료</button>
+        <button type="button" class="pill-btn" style="color:var(--red);" onclick="clearProfilePoints()">전체 삭제</button>
+        <button type="button" class="pill-btn accent" onclick="closeModal('profileModal')">적용</button>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <!-- 생두 정보 모달 -->
-  <div id="beanModal" class="modal-backdrop">
+  <!-- Bean Info Modal -->
+  <dialog id="beanModal" class="modal-dialog" closedby="any" aria-labelledby="beanModalTitle">
     <div class="modal-panel">
       <div class="modal-header">
-        <span>생두 정보 입력</span>
-        <button type="button" class="close-btn" onclick="closeModal('beanModal')">✕</button>
+        <h2 id="beanModalTitle" style="margin:0; font-size:inherit; font-weight:inherit;">생두 정보</h2>
+        <button type="button" class="close-btn" aria-label="닫기" onclick="closeModal('beanModal')">✕</button>
       </div>
-      <label style="font-size:12px; color:var(--text-sec);">생두명 (산지/등급 포함)</label>
-      <input id="beanNameInput" class="input-field" placeholder="예: 에티오피아 예가체프 G1" />
+      <label for="beanNameInput" style="font-size:12px; color:var(--text-sec);">생두명 (산지/등급)</label>
+      <input id="beanNameInput" class="input-field" placeholder="예: 에티오피아 예가체프 G1" autofocus />
 
-      <label style="font-size:12px; color:var(--text-sec);">가공 방식 (프로세스)</label>
+      <span style="font-size:12px; color:var(--text-sec);">가공 방식</span>
       <div class="chip-grid">
         <button type="button" class="chip" onclick="selectProcess('워시드')">워시드</button>
         <button type="button" class="chip" onclick="selectProcess('내추럴')">내추럴</button>
@@ -1101,1449 +339,123 @@
         <button type="button" class="chip" onclick="selectProcess('무산소 발효')">무산소 발효</button>
         <button type="button" class="chip" onclick="selectProcess('디카페인')">디카페인</button>
       </div>
-      <input id="beanProcessInput" class="input-field" placeholder="직접 입력 또는 위 칩 선택" />
+      <input id="beanProcessInput" aria-label="가공 방식 직접 입력" class="input-field" placeholder="직접 입력 또는 선택" />
 
-      <label style="font-size:12px; color:var(--text-sec);">투입량 (g)</label>
-      <input id="beanChargeInput" type="number" class="input-field mono" placeholder="예: 80" />
+      <label for="beanChargeInput" style="font-size:12px; color:var(--text-sec);">투입량 (g)</label>
+      <input id="beanChargeInput" type="number" inputmode="decimal" class="input-field mono" placeholder="예: 80" />
 
-      <label style="font-size:12px; color:var(--text-sec);">목표 배전도: <span id="roastLevelText" style="color:var(--copper-light); font-weight:700;">중배전 (3.0)</span></label>
+      <label for="beanLevelInput" style="font-size:12px; color:var(--text-sec);">목표 배전도: <span id="roastLevelText" style="color:var(--accent); font-weight:600;">중배전 (3.0)</span></label>
       <input id="beanLevelInput" type="range" min="1" max="5" step="0.1" value="3.0" class="heater-slider" oninput="updateRoastLevelLabel(this.value)" />
 
-      <button type="button" class="pill-btn amber" style="justify-content:center; padding:12px;" onclick="saveBeanInfo()">저장</button>
+      <button type="button" class="pill-btn accent" style="justify-content:center; padding:12px; border-radius:12px;" onclick="saveBeanInfo()">저장</button>
     </div>
-  </div>
+  </dialog>
 
-  <!-- 로스터 메모 모달 -->
-  <div id="notesModal" class="modal-backdrop">
+  <!-- Notes Modal -->
+  <dialog id="notesModal" class="modal-dialog" closedby="any" aria-labelledby="notesModalTitle">
     <div class="modal-panel">
       <div class="modal-header">
-        <span>팝콘 로스터 메모</span>
-        <button type="button" class="close-btn" onclick="closeModal('notesModal')">✕</button>
+        <h2 id="notesModalTitle" style="margin:0; font-size:inherit; font-weight:inherit;">로스터 메모</h2>
+        <button type="button" class="close-btn" aria-label="닫기" onclick="closeModal('notesModal')">✕</button>
       </div>
       <div class="chip-grid">
         <button type="button" class="chip" onclick="appendNoteTag('열선 노브 가감')">열선 노브 가감</button>
-        <button type="button" class="chip" onclick="appendNoteTag('챔버 스월링 양호')">챔버 스월링 양호</button>
-        <button type="button" class="chip" onclick="appendNoteTag('유리침니 채프 배출 원활')">유리침니 채프 배출 원활</button>
-        <button type="button" class="chip" onclick="appendNoteTag('1차팝 밀집해서 터짐')">1차팝 밀집해서 터짐</button>
+        <button type="button" class="chip" onclick="appendNoteTag('챔버 스월링 양호')">스월링 양호</button>
+        <button type="button" class="chip" onclick="appendNoteTag('유리침니 채프 배출 원활')">채프 배출 원활</button>
+        <button type="button" class="chip" onclick="appendNoteTag('1차팝 밀집해서 터짐')">1차 팝 밀집</button>
         <button type="button" class="chip" onclick="appendNoteTag('예열 충분')">예열 충분</button>
-        <button type="button" class="chip" onclick="appendNoteTag('산미/플로럴 노트 강조')">산미/플로럴 노트 강조</button>
+        <button type="button" class="chip" onclick="appendNoteTag('산미/플로럴 노트 강조')">산미/플로럴 강조</button>
       </div>
-      <textarea id="roasterNotesInput" class="input-field" rows="5" placeholder="로스팅 특이사항이나 커핑 메모를 남겨주세요."></textarea>
-      <button type="button" class="pill-btn amber" style="justify-content:center; padding:12px;" onclick="closeModal('notesModal')">완료</button>
+      <textarea id="roasterNotesInput" aria-label="로스터 메모 입력" class="input-field" rows="5" placeholder="특이사항이나 커핑 노트를 입력하세요" autofocus></textarea>
+      <button type="button" class="pill-btn accent" style="justify-content:center; padding:12px; border-radius:12px;" onclick="closeModal('notesModal')">완료</button>
     </div>
-  </div>
+  </dialog>
 
-  <!-- 배출 후 원두 무게 입력 모달 -->
-  <div id="weightModal" class="modal-backdrop">
-    <div class="modal-panel" style="max-width:360px; text-align:center;">
+  <!-- Weight Modal -->
+  <dialog id="weightModal" class="modal-dialog" closedby="any" aria-labelledby="weightModalTitle" style="max-width:360px; text-align:center;">
+    <div class="modal-panel">
       <div class="modal-header">
-        <span>배출 완료 · 쿨링 후 무게 계량</span>
-        <button type="button" class="close-btn" onclick="closeModal('weightModal')">✕</button>
+        <h2 id="weightModalTitle" style="margin:0; font-size:inherit; font-weight:inherit;">쿨링 후 무게 계량</h2>
+        <button type="button" class="close-btn" aria-label="닫기" onclick="closeModal('weightModal')">✕</button>
       </div>
-      <div style="font-size:13px; color:var(--text-sec);">쿨링이 끝난 원두 무게(g)를 입력하면 손실률이 자동 계산됩니다.</div>
-      <input id="finalWeightInput" type="number" step="0.1" class="input-field mono" style="font-size:28px; font-weight:900; text-align:center; color:var(--copper-light);" placeholder="0.0 g" oninput="previewWeightLoss()" />
-      <div id="lossPreviewBox" class="mono" style="font-size:16px; font-weight:800; color:var(--amber);"></div>
-      <button type="button" class="pill-btn amber" style="justify-content:center; padding:12px;" onclick="saveFinalWeightAndReport()">완료 및 리포트 생성</button>
+      <div style="font-size:13px; color:var(--text-sec);">쿨링이 끝난 원두 무게(g)를 입력하면 손실률이 계산됩니다.</div>
+      <input id="finalWeightInput" aria-label="쿨링 후 원두 무게(g)" type="number" inputmode="decimal" step="0.1" class="input-field mono" style="font-size:28px; font-weight:700; text-align:center; color:var(--accent);" placeholder="0.0 g" oninput="previewWeightLoss()" autofocus />
+      <div id="lossPreviewBox" class="mono" style="font-size:14px; font-weight:600; color:var(--text-sec);"></div>
+      <button type="button" class="pill-btn accent" style="justify-content:center; padding:12px; border-radius:12px;" onclick="saveFinalWeightAndReport()">완료 및 리포트 생성</button>
     </div>
-  </div>
+  </dialog>
 
-  <!-- 🔥 [추가 4]: 밝은 테마 리포트 결과 확인 모달 -->
-  <div id="reportModal" class="modal-backdrop">
-    <div class="modal-panel" style="max-width:800px; background:#F8FAFC;">
-      <div class="modal-header" style="color:#0F172A;">
-        <span>분석 리포트 완료</span>
-        <button type="button" class="close-btn" style="color:#64748B;" onclick="closeModal('reportModal')">✕</button>
+  <!-- Report Result Modal -->
+  <dialog id="reportModal" class="modal-dialog" closedby="any" aria-labelledby="reportModalTitle" style="max-width:800px; background:#F5F5F7; color:#1D1D1F; border-color:rgba(0,0,0,0.08);">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h2 id="reportModalTitle" style="margin:0; font-size:inherit; font-weight:inherit;">로스팅 리포트</h2>
+        <button type="button" class="close-btn" aria-label="닫기" style="background:#E5E5EA; color:#1D1D1F;" onclick="closeModal('reportModal')">✕</button>
       </div>
-      
-      <div style="max-height: 500px; overflow-y:auto; border: 1px solid #E2E8F0; border-radius:12px; background:#FFF;">
+
+      <div style="max-height:500px; overflow-y:auto; border:1px solid rgba(0,0,0,0.08); border-radius:12px; background:#FFF;">
         <img id="generatedReportImg" style="width:100%; display:block;" alt="Roast Report" />
       </div>
 
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <a id="downloadReportLink" class="pill-btn" style="flex:1; justify-content:center; background:#F97316; color:#FFF; text-decoration:none;" download="roast_report.png">💾 이미지 저장 (.PNG)</a>
-        <button id="downloadCSVBtn" type="button" class="pill-btn" style="flex:1; justify-content:center; background:#3B82F6; color:#FFF;" onclick="downloadCSVLog()">📊 로그 저장 (.CSV)</button>
+      <div style="display:flex; gap:8px;">
+        <a id="downloadReportLink" class="pill-btn" style="flex:1; justify-content:center; background:#1D1D1F; color:#FFF; text-decoration:none; border-radius:10px;" download="roast_report.png">이미지 저장 (.PNG)</a>
+        <button id="downloadCSVBtn" type="button" class="pill-btn" style="flex:1; justify-content:center; background:#FFFFFF; color:#1D1D1F; border:1px solid rgba(0,0,0,0.12); border-radius:10px;" onclick="downloadCSVLog()">로그 저장 (.CSV)</button>
       </div>
-      <button id="shareBtn" type="button" class="pill-btn" style="background:#E2E8F0; color:#0F172A; justify-content:center;" onclick="shareReport()">📤 공유 / 사진첩 저장</button>
+      <button id="shareBtn" type="button" class="pill-btn" style="background:#E5E5EA; color:#1D1D1F; justify-content:center; border-radius:10px;" onclick="shareReport()">공유 및 사진첩 저장</button>
     </div>
-  </div>
+  </dialog>
 
-
-  <!-- 🔥 [추가 4]: 실제 리포트 렌더링을 위한 숨겨진 DOM -->
+  <!-- Offscreen Light Report Renderer -->
   <div id="reportRendererWrap">
     <div class="report-brand-header">
       <div class="report-title-box">
-        <span class="report-maintitle">POPCORN ROASTING REPORT</span>
-        <span id="repDate" class="report-subtitle">2026. 11. 03. 09:50</span>
+        <span class="report-maintitle">Popcorn Roasting Report</span>
+        <span id="repDate" class="report-subtitle">2026. 11. 18. 10:40</span>
       </div>
       <div class="report-title-box" style="text-align:right;">
-        <span id="repBeanName" style="font-size:20px; font-weight:800; color:#F97316;">에티오피아 예가체프 G1</span>
-        <span id="repProcess" class="report-subtitle">워시드 / 목표 배전도: 3.0</span>
+        <span id="repBeanName" style="font-size:20px; font-weight:700; color:#E07A00;">미지정 생두</span>
+        <span id="repProcess" class="report-subtitle">가공방식 미정 · 목표 배전도 3.0</span>
       </div>
     </div>
 
     <div class="report-summary-grid mono">
       <div class="report-stat-box">
-        <div class="report-stat-label">투입 / 배출량 (손실률)</div>
+        <div class="report-stat-label">투입 / 배출량</div>
         <div class="report-stat-val"><span id="repCharge">0.0</span>g / <span id="repFinal">0.0</span>g</div>
-        <div id="repLoss" class="report-stat-sub">손실 0.0%</div>
+        <div id="repLoss" class="report-stat-sub">손실률 -</div>
       </div>
       <div class="report-stat-box">
         <div class="report-stat-label">총 로스팅 시간</div>
         <div id="repTotalTime" class="report-stat-val">00:00</div>
-        <div id="repDropTemp" class="report-stat-sub">배출 온도: --.-℃</div>
+        <div id="repDropTemp" class="report-stat-sub">배출 온도 --.-℃</div>
       </div>
       <div class="report-stat-box">
-        <div class="report-stat-label">DEV (디벨롭 타임) / DTR</div>
+        <div class="report-stat-label">디벨롭 / DTR</div>
         <div id="repDevTime" class="report-stat-val">00:00</div>
-        <div id="repDtr" class="report-stat-sub">DTR 0.0%</div>
+        <div id="repDtr" class="report-stat-sub">DTR -</div>
       </div>
       <div class="report-stat-box">
-        <div class="report-stat-label">주요 포인트 (TP / 1차팝)</div>
-        <div id="repFcTime" class="report-stat-val" style="color:#F97316;">00:00</div>
-        <div id="repTpTemp" class="report-stat-sub">TP: --.-℃</div>
+        <div class="report-stat-label">1차 팝 / 터닝 포인트</div>
+        <div id="repFcTime" class="report-stat-val" style="color:#E07A00;">-</div>
+        <div id="repTpTemp" class="report-stat-sub">TP --.-℃</div>
       </div>
     </div>
 
     <div class="report-phase-bar-wrap mono">
-      <div id="repPhaseDry" class="report-phase" style="background:#14B8A6; width:33.3%;">DRY 33%</div>
+      <div id="repPhaseDry" class="report-phase" style="background:#30D158; width:33.3%;">DRY 33%</div>
       <div id="repPhaseMail" class="report-phase" style="background:#EAB308; width:33.3%;">MAILLARD 33%</div>
-      <div id="repPhaseDev" class="report-phase" style="background:#F97316; width:33.4%;">DEV 34%</div>
+      <div id="repPhaseDev" class="report-phase" style="background:#FF9F0A; width:33.4%;">DEV 34%</div>
     </div>
 
     <div class="report-chart-container">
-      <!-- 별도의 정적 렌더링 캔버스 사용 -->
       <canvas id="reportStaticChart"></canvas>
     </div>
 
     <div class="report-memo-box">
-      <div style="font-weight:800; color:#0F172A; margin-bottom:8px;">로스터 메모 및 열선 기록</div>
-      <div id="repNotes">입력된 메모가 없습니다.</div>
+      <div style="font-weight:600; color:#1D1D1F; margin-bottom:6px;">로스터 메모</div>
+      <div id="repNotes" style="color:#48484A;">입력된 메모가 없습니다.</div>
     </div>
   </div>
 
-
-  <script>
-    // =========================================================================
-    // 1. 상태 관리
-    // =========================================================================
-    function safeLoadProfile() {
-      try {
-        var raw = localStorage.getItem("roast_profile_points");
-        return raw ? JSON.parse(raw) : [];
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function safeSaveProfile(pts) {
-      try {
-        localStorage.setItem("roast_profile_points", JSON.stringify(pts));
-      } catch (e) {}
-    }
-
-    var state = {
-      seconds: 0,
-      isRunning: false,
-      timerId: null,
-      startTimeMs: null,
-      gas: 6.0, // 🔥 [추가 1]: 기본값 6.0으로 변경
-      btBuffer: "",
-      logs: [],
-      chargeSec: null,
-      yellowSec: null,
-      firstCrackSec: null,
-      dropSec: null,
-      isDropped: false,
-      isFinished: false,
-      finalWeight: null,
-      currentRoR: 0.0,
-      allowNextJump: false,
-      beanInfo: { name: "", process: "", chargeWeight: null, targetLevel: 3.0 },
-      profilePoints: safeLoadProfile(),
-      cameraStream: null,
-      zoomLevel: 1,
-      ocrEnabled: false,
-      ocrWorker: null,
-      ocrBusy: false,
-      recentReadings: [],
-      lastEmitTime: 0,
-      lastAcceptedTime: Date.now()
-    };
-
-    var PRESETS = {
-      light: [
-        { sec: 0, temp: 165 }, { sec: 35, temp: 98 }, { sec: 90, temp: 132 },
-        { sec: 150, temp: 162 }, { sec: 210, temp: 184 }, { sec: 270, temp: 199 }, { sec: 330, temp: 207 }
-      ],
-      medium: [
-        { sec: 0, temp: 170 }, { sec: 40, temp: 96 }, { sec: 100, temp: 130 },
-        { sec: 170, temp: 158 }, { sec: 240, temp: 180 }, { sec: 315, temp: 198 }, { sec: 390, temp: 213 }
-      ],
-      dark: [
-        { sec: 0, temp: 175 }, { sec: 42, temp: 100 }, { sec: 110, temp: 134 },
-        { sec: 180, temp: 160 }, { sec: 260, temp: 183 }, { sec: 330, temp: 199 }, { sec: 390, temp: 212 }, { sec: 435, temp: 221 }
-      ]
-    };
-
-    function formatTime(s) {
-      var m = Math.floor(s / 60);
-      var sec = s % 60;
-      return String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
-    }
-
-    async function requestWakeLock() {
-      if ("wakeLock" in navigator) {
-        try { await navigator.wakeLock.request("screen"); } catch (e) {}
-      }
-    }
-
-    // =========================================================================
-    // 2. 차트 엔진 (메인 워크스페이스용 다크 테마)
-    // =========================================================================
-    var chart = null;
-
-    function mappedRoR(ror) {
-      var min = -20, max = 160;
-      var clamped = Math.min(Math.max(ror, min), max);
-      return ((clamped - min) / (max - min)) * 260;
-    }
-
-    function initChart() {
-      if (typeof window.Chart === "undefined") {
-        drawNativeFallbackChart();
-        return;
-      }
-      try {
-        var ctx = document.getElementById("roastChart").getContext("2d");
-        chart = new Chart(ctx, {
-          type: "line",
-          data: {
-            datasets: [
-              {
-                label: "BT (℃)",
-                data: [],
-                borderColor: "#FFA352",
-                backgroundColor: "#FFA352",
-                borderWidth: 3.2,
-                pointRadius: function(c) { return (c.raw && c.raw.event) ? 5 : 0; },
-                pointBackgroundColor: "#FFA352",
-                tension: 0.25
-              },
-              {
-                label: "RoR 추세",
-                data: [],
-                borderColor: "#33D1E0",
-                backgroundColor: "rgba(51, 209, 224, 0.12)",
-                borderWidth: 1.6,
-                fill: true,
-                pointRadius: 0,
-                tension: 0.3
-              },
-              {
-                label: "목표 프로파일",
-                data: [],
-                borderColor: "rgba(163, 140, 250, 0.7)",
-                borderDash: [6, 4],
-                borderWidth: 2,
-                pointRadius: 3,
-                pointBackgroundColor: "#A38CFA",
-                tension: 0.25
-              },
-              {
-                label: "200℃ 1차팝 기준",
-                data: [{ x: 0, y: 200 }, { x: 600, y: 200 }],
-                borderColor: "rgba(255, 255, 255, 0.12)",
-                borderDash: [4, 4],
-                borderWidth: 1,
-                pointRadius: 0
-              },
-              {
-                label: "현재 시각선",
-                data: [],
-                borderColor: "#F2802E",
-                borderDash: [2, 2],
-                borderWidth: 2,
-                pointRadius: 0
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: false,
-            scales: {
-              x: {
-                type: "linear",
-                min: 0,
-                max: 360,
-                grid: { color: "rgba(255,255,255,0.06)" },
-                ticks: {
-                  color: "#6B707B",
-                  callback: function(val) { return formatTime(Math.round(val)); }
-                }
-              },
-              y: {
-                min: 0,
-                max: 260,
-                grid: { color: "rgba(255,255,255,0.06)" },
-                ticks: { color: "#6B707B", stepSize: 50 }
-              }
-            },
-            plugins: {
-              legend: { display: false }
-            }
-          }
-        });
-        updateChart();
-      } catch (e) {
-        drawNativeFallbackChart();
-      }
-    }
-
-    function drawNativeFallbackChart() {
-      // 캔버스 크기 제약 없이 유연하게 그리기
-      var canvas = document.getElementById("roastChart");
-      if (!canvas) return;
-      var rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = Math.max(rect.width, 300);
-      canvas.height = Math.max(rect.height, 150); // 최소 높이 낮춤
-      var ctx = canvas.getContext("2d");
-      var w = canvas.width, h = canvas.height;
-      var padL = 36, padR = 14, padT = 14, padB = 24;
-      var plotW = w - padL - padR, plotH = h - padT - padB;
-
-      ctx.clearRect(0, 0, w, h);
-
-      var maxLogSec = state.logs.length ? state.logs[state.logs.length - 1].sec : 0;
-      var maxProfSec = state.profilePoints.length ? state.profilePoints[state.profilePoints.length - 1].sec : 0;
-      var maxX = Math.max(maxLogSec, maxProfSec, state.seconds, 240) + 30;
-
-      function xPos(sec) { return padL + (sec / maxX) * plotW; }
-      function yPos(temp) { return padT + plotH - (Math.min(Math.max(temp, 0), 260) / 260) * plotH; }
-
-      ctx.strokeStyle = "rgba(255,255,255,0.06)";
-      ctx.fillStyle = "#6B707B";
-      ctx.font = "10px monospace";
-      [0, 50, 100, 150, 200, 250].forEach(function(yv) {
-        var y = yPos(yv);
-        ctx.beginPath();
-        ctx.moveTo(padL, y);
-        ctx.lineTo(w - padR, y);
-        ctx.stroke();
-        ctx.fillText(String(yv), 6, y + 3);
-      });
-
-      ctx.save();
-      ctx.setLineDash([4, 4]);
-      ctx.strokeStyle = "rgba(255,255,255,0.18)";
-      ctx.beginPath();
-      ctx.moveTo(padL, yPos(200));
-      ctx.lineTo(w - padR, yPos(200));
-      ctx.stroke();
-      ctx.restore();
-
-      if (state.profilePoints.length > 0) {
-        ctx.save();
-        ctx.setLineDash([6, 4]);
-        ctx.strokeStyle = "rgba(163, 140, 250, 0.75)";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        state.profilePoints.forEach(function(p, i) {
-          var x = xPos(p.sec), y = yPos(p.temp);
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      if (state.logs.length > 1) {
-        ctx.strokeStyle = "#33D1E0";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        state.logs.forEach(function(l, i) {
-          var x = xPos(l.sec), y = yPos(mappedRoR(l.ror));
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-      }
-
-      if (state.logs.length > 0) {
-        ctx.strokeStyle = "#FFA352";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        state.logs.forEach(function(l, i) {
-          var x = xPos(l.sec), y = yPos(l.bt);
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-      }
-
-      if (state.seconds > 0) {
-        ctx.save();
-        ctx.setLineDash([2, 2]);
-        ctx.strokeStyle = "#F2802E";
-        ctx.lineWidth = 2;
-        var curX = xPos(state.seconds);
-        ctx.beginPath();
-        ctx.moveTo(curX, padT);
-        ctx.lineTo(curX, h - padB);
-        ctx.stroke();
-        ctx.restore();
-      }
-    }
-
-    function updateChart() {
-      if (!chart && typeof window.Chart !== "undefined") {
-        initChart();
-      }
-      if (!chart) {
-        drawNativeFallbackChart();
-        return;
-      }
-      var mapBySec = new Map();
-      state.logs.forEach(function(l) { mapBySec.set(l.sec, l); });
-      var deduped = Array.from(mapBySec.values()).sort(function(a, b) { return a.sec - b.sec; });
-
-      chart.data.datasets[0].data = deduped.map(function(l) { return { x: l.sec, y: l.bt, event: l.event }; });
-      chart.data.datasets[1].data = deduped.map(function(l) { return { x: l.sec, y: mappedRoR(l.ror), realRoR: l.ror }; });
-      chart.data.datasets[2].data = state.profilePoints.map(function(p) { return { x: p.sec, y: p.temp }; });
-
-      var maxLogSec = deduped.length ? deduped[deduped.length - 1].sec : 0;
-      var maxProfSec = state.profilePoints.length ? state.profilePoints[state.profilePoints.length - 1].sec : 0;
-      var maxX = Math.max(maxLogSec, maxProfSec, state.seconds, 240) + 30;
-      chart.options.scales.x.max = maxX;
-      chart.data.datasets[3].data = [{ x: 0, y: 200 }, { x: maxX, y: 200 }];
-
-      if (state.seconds > 0) {
-        chart.data.datasets[4].data = [{ x: state.seconds, y: 0 }, { x: state.seconds, y: 260 }];
-      } else {
-        chart.data.datasets[4].data = [];
-      }
-
-      chart.update("none");
-    }
-
-    // =========================================================================
-    // 3. 타이머 & 로스팅 핵심 연산
-    // =========================================================================
-    function toggleRoastTimer() {
-      if (state.isDropped) return;
-      requestWakeLock();
-      if (state.isRunning) {
-        clearInterval(state.timerId);
-        state.isRunning = false;
-      } else {
-        var isFirstStart = (state.seconds === 0 && state.logs.length === 0);
-        state.startTimeMs = Date.now() - state.seconds * 1000;
-        state.timerId = setInterval(tick, 1000);
-        state.isRunning = true;
-        
-        if (isFirstStart) {
-          state.chargeSec = 0;
-          recordData("투입");
-        }
-      }
-      updateUI();
-    }
-
-    function confirmPause() {
-      if (confirm("로스팅 타이머를 일시정지하시겠습니까?")) {
-        toggleRoastTimer();
-      }
-    }
-
-    function tick() {
-      state.seconds = Math.floor((Date.now() - state.startTimeMs) / 1000);
-      if (state.ocrEnabled && (Date.now() - state.lastAcceptedTime > 6500)) {
-        document.getElementById("stallBanner").classList.add("active");
-      } else {
-        document.getElementById("stallBanner").classList.remove("active");
-      }
-      updateChart();
-      updateUI();
-    }
-
-    function calculateRoR(currentBt, atSec) {
-      if (!state.logs.length) return 0;
-      var first = state.logs[0];
-      var windowSec = 20;
-      if (atSec - first.sec < windowSec / 2) return 0;
-      var targetSec = atSec - windowSec;
-      var ref = first;
-      for (var i = state.logs.length - 1; i >= 0; i--) {
-        if (state.logs[i].sec <= targetSec) {
-          ref = state.logs[i];
-          break;
-        }
-      }
-      var dt = atSec - ref.sec;
-      return dt > 0 ? ((currentBt - ref.bt) / dt) * 60.0 : 0;
-    }
-
-    function getTurningPoint() {
-      if (state.logs.length < 2) return null;
-      var startSec = state.chargeSec !== null ? state.chargeSec : 0;
-      var upper = state.yellowSec !== null ? state.yellowSec : (state.firstCrackSec !== null ? state.firstCrackSec : Math.max(state.seconds, 120));
-      var limitSec = Math.min(upper, startSec + 120);
-      var cands = state.logs.filter(function(l) { return l.sec >= startSec && l.sec <= limitSec && l.bt > 0; });
-      if (!cands.length) return null;
-      return cands.reduce(function(min, cur) { return cur.bt < min.bt ? cur : min; }, cands[0]);
-    }
-
-    function getTargetBTAt(sec) {
-      var pts = state.profilePoints;
-      if (!pts.length) return null;
-      for (var i = 0; i < pts.length; i++) {
-        if (pts[i].sec === sec) return pts[i].temp;
-      }
-      var nextIdx = -1;
-      for (var j = 0; j < pts.length; j++) {
-        if (pts[j].sec > sec) { nextIdx = j; break; }
-      }
-      if (nextIdx === -1) return pts[pts.length - 1].temp;
-      if (nextIdx === 0) return pts[0].temp;
-      var p0 = pts[nextIdx - 1], p1 = pts[nextIdx];
-      var ratio = (sec - p0.sec) / Math.max(p1.sec - p0.sec, 1);
-      return p0.temp + ratio * (p1.temp - p0.temp);
-    }
-
-    function recordData(event, explicitBT) {
-      if (typeof event === "undefined") event = "";
-      if (typeof explicitBT === "undefined") explicitBT = null;
-      if (!state.isRunning && state.seconds === 0 && event !== "투입") {
-        toggleRoastTimer();
-      }
-      var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : 0;
-      var bt = explicitBT !== null ? explicitBT : (parseFloat(state.btBuffer) || lastBT);
-      if (!bt || bt <= 0) return;
-
-      var ror = calculateRoR(bt, state.seconds);
-      state.logs.push({
-        sec: state.seconds,
-        timeStr: formatTime(state.seconds),
-        bt: bt,
-        ror: ror,
-        gas: state.gas,
-        event: event
-      });
-      state.currentRoR = ror;
-      state.btBuffer = "";
-      updateChart();
-      updateUI();
-    }
-
-    // =========================================================================
-    // 4. OCR 스캔 영역 (유지)
-    // =========================================================================
-    function extractTemperatureFromText(text) {
-      var s = text.replace(/[^\d]/g, ""); 
-      if (!s) return null;
-
-      var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : null;
-      var highTempContext = (lastBT !== null && lastBT >= 150.0) || state.seconds >= 50 || state.yellowSec !== null || state.firstCrackSec !== null;
-
-      if (highTempContext && s.length === 3) {
-        var intVal = parseFloat(s);
-        if (intVal >= 175 && intVal <= 260) return intVal;
-      }
-
-      if (s.length >= 3 && s.length <= 4) {
-        var decVal = parseFloat(s) / 10.0;
-        if (lastBT !== null && Math.abs(parseFloat(s) - lastBT) < Math.abs(decVal - lastBT) && parseFloat(s) >= 175 && parseFloat(s) <= 260) {
-            return parseFloat(s);
-        }
-        if (decVal >= 12 && decVal <= 260) return decVal;
-      }
-      return null;
-    }
-
-    function isReasonableReading(val) {
-      if (val < 12 || val > 260) return false;
-      if (state.allowNextJump) return true;
-      if (!state.logs.length) return true;
-      var last = state.logs[state.logs.length - 1];
-      if (last.bt >= 140 && val < 60) return false;
-      var dt = Math.max(state.seconds - last.sec, 1);
-      var allowedJump = Math.min(9.0 * dt + 5.0, 45.0);
-      return Math.abs(val - last.bt) <= allowedJump;
-    }
-
-    function ingestOCRValue(val) {
-      var now = Date.now();
-      document.getElementById("ocrStatusLabel").textContent = "인식: " + val.toFixed(1) + "℃";
-      state.recentReadings = state.recentReadings.filter(function(r) { return now - r.time <= 1500; });
-
-      var matched = null;
-      for (var i = 0; i < state.recentReadings.length; i++) {
-        if (Math.abs(state.recentReadings[i].value - val) <= 3.5) {
-          matched = state.recentReadings[i];
-          break;
-        }
-      }
-      state.recentReadings.push({ value: val, time: now });
-      if (state.recentReadings.length > 3) state.recentReadings.shift();
-
-      if (!matched) return;
-      if (now - state.lastEmitTime < 450) return;
-      state.lastEmitTime = now;
-
-      var agreed = Math.round(((val + matched.value) / 2.0) * 10) / 10;
-
-      if (isReasonableReading(agreed)) {
-        state.allowNextJump = false;
-        state.lastAcceptedTime = now;
-        document.getElementById("ocrDot").style.background = "var(--mint)";
-        document.getElementById("stallBanner").classList.remove("active");
-        recordData("", agreed);
-      } else {
-        document.getElementById("ocrDot").style.background = "var(--red)";
-      }
-    }
-
-    async function toggleCamera() {
-      var video = document.getElementById("cameraVideo");
-      var btn = document.getElementById("camToggleBtn");
-      var ocrBtn = document.getElementById("ocrToggleBtn");
-
-      if (state.cameraStream) {
-        state.cameraStream.getTracks().forEach(function(t) { t.stop(); });
-        state.cameraStream = null;
-        video.srcObject = null;
-        state.ocrEnabled = false;
-        btn.textContent = "📷 카메라 켬";
-        btn.classList.remove("active-mint");
-        ocrBtn.disabled = true;
-        document.getElementById("ocrStatusLabel").textContent = "카메라 꺼짐";
-        return;
-      }
-
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("카메라 기능은 사파리(Safari) 주소창에서 https:// 주소로 접속했을 때만 작동합니다.");
-        return;
-      }
-
-      try {
-        var stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
-          audio: false
-        });
-        state.cameraStream = stream;
-        video.srcObject = stream;
-        btn.textContent = "📷 카메라 끔";
-        btn.classList.add("active-mint");
-        ocrBtn.disabled = false;
-        document.getElementById("ocrStatusLabel").textContent = "OCR 대기 중";
-      } catch (err) {
-        alert("설정 > Safari > 카메라 권한을 허용해주세요.");
-      }
-    }
-
-    function setCameraZoom(level) {
-      state.zoomLevel = level;
-      [1, 2, 3].forEach(function(z) {
-        document.getElementById("zoom" + z).classList.toggle("active", z === level);
-      });
-      var video = document.getElementById("cameraVideo");
-      video.style.transform = "scale(" + level + ")";
-    }
-
-    async function toggleOCR() {
-      var ocrBtn = document.getElementById("ocrToggleBtn");
-      state.ocrEnabled = !state.ocrEnabled;
-      if (!state.ocrEnabled) {
-        ocrBtn.textContent = "🔍 OCR 켜기";
-        ocrBtn.classList.remove("active-amber");
-        document.getElementById("ocrStatusLabel").textContent = "자동인식 꺼짐";
-        document.getElementById("stallBanner").classList.remove("active");
-        return;
-      }
-
-      if (typeof window.Tesseract === "undefined") {
-        alert("엔진 로드 중입니다. 2초 뒤 다시 눌러주세요.");
-        state.ocrEnabled = false;
-        return;
-      }
-
-      ocrBtn.textContent = "🔍 OCR 작동중";
-      ocrBtn.classList.add("active-amber");
-      state.lastAcceptedTime = Date.now();
-      document.getElementById("ocrStatusLabel").textContent = "엔진 준비중...";
-
-      try {
-        if (!state.ocrWorker) {
-          state.ocrWorker = await Tesseract.createWorker("eng");
-          await state.ocrWorker.setParameters({
-            tessedit_char_whitelist: "0123456789",
-            tessedit_pageseg_mode: "7" 
-          });
-        }
-        document.getElementById("ocrStatusLabel").textContent = "인식 스캔 중";
-        runOCRLoop();
-      } catch (e) {
-        document.getElementById("ocrStatusLabel").textContent = "OCR 초기화 실패";
-      }
-    }
-    
-    function apply7SegmentDilation(ctx, width, height) {
-      var imgData = ctx.getImageData(0, 0, width, height);
-      var data = imgData.data;
-      var bin = new Uint8Array(width * height);
-      var sum = 0;
-      
-      for (var i = 0; i < data.length; i += 4) {
-        var luma = data[i]*0.299 + data[i+1]*0.587 + data[i+2]*0.114;
-        data[i] = data[i+1] = data[i+2] = luma;
-        sum += luma;
-      }
-      var threshold = (sum / (width * height)) * 0.85; 
-      
-      for (var i = 0; i < data.length; i += 4) {
-        bin[i/4] = data[i] < threshold ? 1 : 0; 
-      }
-      
-      for (var y = 1; y < height - 1; y++) {
-        for (var x = 1; x < width - 1; x++) {
-          var idx = y * width + x;
-          var p = idx * 4;
-          if (bin[idx] === 0) {
-            if (bin[idx-1] === 1 || bin[idx+1] === 1 || bin[idx-width] === 1 || bin[idx+width] === 1) {
-              data[p] = data[p+1] = data[p+2] = 0;
-            } else {
-              data[p] = data[p+1] = data[p+2] = 255; 
-            }
-          } else {
-            data[p] = data[p+1] = data[p+2] = 0;
-          }
-        }
-      }
-      ctx.putImageData(imgData, 0, 0);
-    }
-    
-    var lastFrameLuma = null;
-    function isFrameStable(ctx, width, height) {
-      var data = ctx.getImageData(width/2 - 20, height/2 - 20, 40, 40).data;
-      if (!lastFrameLuma) { lastFrameLuma = data; return false; }
-      var diff = 0;
-      for (var i=0; i<data.length; i+=4) { diff += Math.abs(data[i] - lastFrameLuma[i]); }
-      lastFrameLuma = data;
-      return (diff / (40*40)) < 12.0; 
-    }
-
-    async function runOCRLoop() {
-      if (!state.ocrEnabled || !state.cameraStream) return;
-      if (!state.ocrBusy) {
-        state.ocrBusy = true;
-        try {
-          var video = document.getElementById("cameraVideo");
-          var canvas = document.getElementById("ocrCanvas");
-          if (video.videoWidth > 0) {
-            var vw = video.videoWidth / state.zoomLevel;
-            var vh = video.videoHeight / state.zoomLevel;
-            var cropW = vw * 0.48;
-            var cropH = vh * 0.40;
-            var sx = (video.videoWidth - cropW) / 2;
-            var sy = (video.videoHeight - cropH) / 2;
-
-            canvas.width = 300;
-            canvas.height = 120;
-            var ctx = canvas.getContext("2d", { willReadFrequently: true });
-            
-            ctx.drawImage(video, sx, sy, cropW, cropH, 0, 0, canvas.width, canvas.height);
-            
-            if (isFrameStable(ctx, canvas.width, canvas.height)) {
-                apply7SegmentDilation(ctx, canvas.width, canvas.height);
-                var res = await state.ocrWorker.recognize(canvas);
-                var temp = extractTemperatureFromText(res.data.text);
-                if (temp !== null) ingestOCRValue(temp);
-            }
-          }
-        } catch (e) {}
-        state.ocrBusy = false;
-      }
-      if (state.ocrEnabled) {
-        setTimeout(runOCRLoop, 180);
-      }
-    }
-
-    function forceSyncOCR() {
-      state.allowNextJump = true;
-      state.recentReadings = [];
-      state.lastAcceptedTime = Date.now();
-      document.getElementById("stallBanner").classList.remove("active");
-    }
-
-    // =========================================================================
-    // 5. 열선 노브(4.0~8.0, 0.1단위), 마일스톤 & 홀드 배출
-    // =========================================================================
-    function adjustGas(delta) {
-      if (state.isDropped) return;
-      // 🔥 [추가 1, 2]: 최소 4.0, 최대 8.0, 0.1 단위 조절
-      var val = Math.round((state.gas + delta) * 10) / 10;
-      state.gas = Math.min(8.0, Math.max(4.0, val));
-      document.getElementById("gasSlider").value = state.gas;
-      document.getElementById("gasValLabel").textContent = state.gas.toFixed(1) + "단";
-    }
-
-    function onGasSliderChange(val) {
-      state.gas = Math.round(parseFloat(val) * 10) / 10;
-      document.getElementById("gasValLabel").textContent = state.gas.toFixed(1) + "단";
-    }
-
-    function handleMilestone(type) {
-      if (state.isDropped) return;
-      if (type === "옐로우") {
-        if (state.yellowSec !== null) {
-          if (confirm("옐로우 기록을 취소하시겠습니까?")) {
-            state.yellowSec = null;
-            removeEventLog("옐로우");
-          }
-          return;
-        }
-        state.yellowSec = state.seconds;
-        recordData("옐로우");
-      } else if (type === "1차 크랙") {
-        if (state.firstCrackSec !== null) {
-          if (confirm("1차 팝 기록을 취소하시겠습니까?")) {
-            state.firstCrackSec = null;
-            removeEventLog("1차 크랙");
-          }
-          return;
-        }
-        state.firstCrackSec = state.seconds;
-        recordData("1차 크랙");
-      }
-      updateUI();
-    }
-
-    function removeEventLog(evName) {
-      for (var i = state.logs.length - 1; i >= 0; i--) {
-        if (state.logs[i].event === evName) {
-          state.logs.splice(i, 1);
-          break;
-        }
-      }
-      updateChart();
-      updateUI();
-    }
-
-    function deleteLastLog() {
-      var removed = state.logs.pop();
-      if (!removed) return;
-      if (removed.event === "투입") state.chargeSec = null;
-      if (removed.event === "옐로우") state.yellowSec = null;
-      if (removed.event === "1차 크랙") state.firstCrackSec = null;
-      state.currentRoR = state.logs.length ? state.logs[state.logs.length - 1].ror : 0;
-      updateChart();
-      updateUI();
-    }
-
-    function setupHoldToDrop() {
-      var bar = document.getElementById("holdDropBar");
-      var fill = document.getElementById("holdDropFill");
-      var label = document.getElementById("holdDropLabel");
-      var holdStart = 0, animFrame = null, holding = false;
-
-      function startHold(e) {
-        if (state.isDropped) return;
-        if (e.cancelable) e.preventDefault();
-        holding = true;
-        holdStart = performance.now();
-        label.textContent = "배출 진행 중... (계속 누르세요)";
-        function step(now) {
-          if (!holding) return;
-          var pct = Math.min(100, ((now - holdStart) / 1000) * 100);
-          fill.style.width = pct + "%";
-          if (pct >= 100) {
-            holding = false;
-            fill.style.width = "0%";
-            markDrop();
-          } else {
-            animFrame = requestAnimationFrame(step);
-          }
-        }
-        animFrame = requestAnimationFrame(step);
-      }
-
-      function endHold() {
-        if (!holding) return;
-        holding = false;
-        cancelAnimationFrame(animFrame);
-        fill.style.width = "0%";
-        label.textContent = "오작동 방지: 1초간 길게 눌러야 배출됩니다";
-        setTimeout(function() {
-          if (!holding) label.textContent = "🔒 길게 눌러 배출 (HOLD 1s TO DROP)";
-        }, 1400);
-      }
-
-      bar.addEventListener("pointerdown", startHold);
-      bar.addEventListener("touchstart", startHold, { passive: false });
-      window.addEventListener("pointerup", endHold);
-      window.addEventListener("touchend", endHold);
-      window.addEventListener("pointercancel", endHold);
-    }
-
-    function markDrop() {
-      if (state.isDropped) return;
-      state.isDropped = true;
-      state.dropSec = state.seconds;
-      recordData("배출");
-      clearInterval(state.timerId);
-      state.isRunning = false;
-      if (state.ocrEnabled) toggleOCR();
-      updateUI();
-    }
-
-    function undoDrop() {
-      if (!state.isDropped || state.isFinished) return;
-      state.isDropped = false;
-      state.dropSec = null;
-      removeEventLog("배출");
-      toggleRoastTimer();
-    }
-
-    // =========================================================================
-    // 6. UI 전체 동기화
-    // =========================================================================
-    function updateUI() {
-      document.getElementById("timerDisplay").textContent = formatTime(state.seconds);
-      document.getElementById("pauseBtn").style.display = (state.isRunning && !state.isDropped) ? "inline-flex" : "none";
-      document.getElementById("exportBtn").disabled = state.logs.length === 0;
-      document.getElementById("delLastLogBtn").style.visibility = (state.logs.length > 0 && !state.isDropped) ? "visible" : "hidden";
-
-      var dot = document.getElementById("statusDot");
-      var stText = document.getElementById("statusText");
-      if (state.isFinished) {
-        dot.style.background = "var(--mint)"; stText.style.color = "var(--mint)"; stText.textContent = "저장 완료";
-      } else if (state.isDropped) {
-        dot.style.background = "var(--amber)"; stText.style.color = "var(--amber)"; stText.textContent = "쿨링 · 무게 입력 대기";
-      } else if (state.firstCrackSec !== null) {
-        dot.style.background = "var(--amber)"; stText.style.color = "var(--amber)"; stText.textContent = "1차 팝 이후 디벨롭 중";
-      } else if (state.yellowSec !== null) {
-        dot.style.background = "#EBC752"; stText.style.color = "#EBC752"; stText.textContent = "메이야르 구간 진행 중";
-      } else if (state.isRunning) {
-        dot.style.background = "var(--copper-light)"; stText.style.color = "var(--copper-light)"; stText.textContent = "로스팅 진행 중";
-      } else {
-        dot.style.background = "var(--text-faint)"; stText.style.color = "var(--text-faint)";
-        stText.textContent = state.seconds > 0 ? "일시정지됨" : "로스팅 대기";
-      }
-
-      var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : 0;
-      document.getElementById("heroBT").textContent = lastBT > 0 ? lastBT.toFixed(1) : "--.-";
-      document.getElementById("heroRoR").textContent = (state.currentRoR >= 0 ? "+" : "") + state.currentRoR.toFixed(1);
-
-      var guideRow = document.getElementById("heroGuidanceRow");
-      if (state.profilePoints.length > 0) {
-        guideRow.style.display = "flex";
-        var target = getTargetBTAt(state.isDropped ? (state.dropSec || state.seconds) : state.seconds);
-        document.getElementById("targetBTLabel").textContent = "목표 " + target.toFixed(1) + "℃";
-        var gLabel = document.getElementById("heaterGuidanceLabel");
-        if (lastBT > 0) {
-          var delta = lastBT - target;
-          if (delta >= 3.0) {
-            gLabel.textContent = "목표 +" + delta.toFixed(1) + "℃ 초과 · 열선 감발 권장";
-            gLabel.style.color = "var(--amber)";
-          } else if (delta <= -3.0) {
-            gLabel.textContent = "목표 " + delta.toFixed(1) + "℃ 부족 · 열선 증발 권장";
-            gLabel.style.color = "var(--amber)";
-          } else {
-            gLabel.textContent = "목표 궤적 일치 (" + (delta >= 0 ? "+" : "") + delta.toFixed(1) + "℃)";
-            gLabel.style.color = "var(--mint)";
-          }
-        }
-      } else {
-        guideRow.style.display = "none";
-      }
-
-      var effSec = state.isDropped ? (state.dropSec || state.seconds) : state.seconds;
-      var dtrStr = "0.0%", devStr = "00:00";
-      if (state.firstCrackSec !== null && effSec >= state.firstCrackSec && effSec > 0) {
-        var dev = effSec - state.firstCrackSec;
-        devStr = formatTime(dev);
-        dtrStr = ((dev / effSec) * 100).toFixed(1) + "%";
-      }
-      document.getElementById("metricDTR").textContent = dtrStr;
-      document.getElementById("metricDevTime").textContent = devStr;
-
-      var tp = getTurningPoint();
-      document.getElementById("metricTP").textContent = tp ? tp.bt.toFixed(0) + "℃" : "- ℃";
-
-      var total = Math.max(effSec, 1);
-      var ySec = state.yellowSec !== null ? state.yellowSec : Math.min(total, state.firstCrackSec !== null ? state.firstCrackSec : total);
-      var fcSec = state.firstCrackSec !== null ? state.firstCrackSec : total;
-      var dryS = Math.max(0, Math.min(ySec, total));
-      var mailS = Math.max(0, Math.min(fcSec, total) - dryS);
-      var devS = Math.max(0, total - Math.max(dryS, Math.min(fcSec, total)));
-
-      document.getElementById("dryTime").textContent = formatTime(dryS);
-      document.getElementById("dryPct").textContent = ((dryS / total) * 100).toFixed(1) + "%";
-      document.getElementById("mailTime").textContent = formatTime(mailS);
-      document.getElementById("mailPct").textContent = ((mailS / total) * 100).toFixed(1) + "%";
-      document.getElementById("devPhaseTime").textContent = formatTime(devS);
-      document.getElementById("devPhasePct").textContent = ((devS / total) * 100).toFixed(1) + "%";
-
-      var bYellow = document.getElementById("btnYellow");
-      bYellow.textContent = state.yellowSec !== null ? "✓ 옐로우" : "옐로우";
-      bYellow.classList.toggle("marked", state.yellowSec !== null);
-
-      var bCrack = document.getElementById("btnCrack");
-      bCrack.textContent = state.firstCrackSec !== null ? "✓ 1차 팝" : "1차 팝 (Crack)";
-      bCrack.classList.toggle("marked", state.firstCrackSec !== null);
-
-      var startBtn = document.getElementById("mainStartBtn");
-      var holdBar = document.getElementById("holdDropBar");
-      var afterRow = document.getElementById("afterDropRow");
-
-      if (state.isDropped) {
-        startBtn.style.display = "none";
-        holdBar.style.display = "none";
-        afterRow.style.display = "flex";
-      } else if (state.isRunning) {
-        startBtn.style.display = "none";
-        holdBar.style.display = "flex";
-        afterRow.style.display = "none";
-      } else {
-        startBtn.style.display = "block";
-        startBtn.textContent = state.seconds > 0 ? "▶ 로스팅 타이머 재개" : "▶ 로스팅 시작 (START)";
-        holdBar.style.display = "none";
-        afterRow.style.display = "none";
-      }
-
-      var tbody = document.getElementById("logBody");
-      tbody.innerHTML = state.logs.slice().reverse().map(function(l) {
-        var note = l.event ? l.event : dtrStr;
-        var color = l.event ? "var(--amber)" : "#fff";
-        return '<div class="log-row" style="color:' + color + '">' +
-          '<span>' + l.timeStr + '</span>' +
-          '<span>' + l.bt.toFixed(1) + '</span>' +
-          '<span style="color:var(--teal)">' + l.ror.toFixed(1) + '</span>' +
-          '<span>' + l.gas.toFixed(1) + '단</span>' +
-          '<span>' + note + '</span>' +
-          '<span></span>' +
-        '</div>';
-      }).join("");
-    }
-
-    // =========================================================================
-    // 7. 🔥 [추가 3]: 인라인 직접 입력 키패드 기능
-    // =========================================================================
-    function pressKey(k) {
-      if (k === "DEL") state.btBuffer = state.btBuffer.slice(0, -1);
-      else if (k === "ENT") {
-        if (state.btBuffer) {
-          state.allowNextJump = true;
-          // 자동으로 소수점 처리 (198 입력 시 198.0도로 기록)
-          var val = parseFloat(state.btBuffer);
-          if (!isNaN(val)) {
-            recordData("", val);
-            state.btBuffer = "";
-          }
-        }
-      } else {
-        state.btBuffer += k;
-      }
-      document.getElementById("inlineKeypadDisplay").textContent = (state.btBuffer || "---") + " ℃";
-    }
-
-    function quickRecordTemp(val) {
-      state.allowNextJump = true;
-      recordData("", val);
-      state.btBuffer = "";
-      document.getElementById("inlineKeypadDisplay").textContent = "--- ℃";
-    }
-
-    function openModal(id) { document.getElementById(id).classList.add("open"); }
-    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
-
-    function saveProfileToStorage() {
-      state.profilePoints.sort(function(a, b) { return a.sec - b.sec; });
-      safeSaveProfile(state.profilePoints);
-      refreshProfileUI();
-      updateChart();
-      updateUI();
-    }
-
-    function applyPreset(key) {
-      state.profilePoints = PRESETS[key].map(function(p) { return { sec: p.sec, temp: p.temp }; });
-      saveProfileToStorage();
-    }
-
-    function clearProfilePoints() {
-      state.profilePoints = [];
-      saveProfileToStorage();
-    }
-
-    function addProfilePointManual() {
-      var tRaw = document.getElementById("profTimeInput").value.trim();
-      var temp = parseFloat(document.getElementById("profTempInput").value);
-      if (!tRaw || isNaN(temp)) return;
-      var sec = 0;
-      if (tRaw.indexOf(":") !== -1) {
-        var parts = tRaw.split(":");
-        sec = (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
-      } else {
-        sec = Math.round(parseFloat(tRaw));
-      }
-      state.profilePoints.push({ sec: sec, temp: temp });
-      document.getElementById("profTimeInput").value = "";
-      document.getElementById("profTempInput").value = "";
-      saveProfileToStorage();
-    }
-
-    function removeProfilePointAt(idx) {
-      state.profilePoints.splice(idx, 1);
-      saveProfileToStorage();
-    }
-
-    function handleCSVFile(e) {
-      var file = e.target.files[0];
-      if (!file) return;
-      var reader = new FileReader();
-      reader.onload = function(ev) {
-        var lines = String(ev.target.result || "").split(/
-?
-/);
-        var pts = [];
-        lines.forEach(function(line) {
-          var parts = line.split(",");
-          if (parts.length >= 2) {
-            var tStr = parts[0].trim();
-            var temp = parseFloat(parts[1].trim());
-            var sec = NaN;
-            if (tStr.indexOf(":") !== -1) {
-              var hm = tStr.split(":");
-              var m = parseInt(hm[0], 10), s = parseInt(hm[1], 10);
-              if (!isNaN(m) && !isNaN(s)) sec = m * 60 + s;
-            } else {
-              sec = Math.round(parseFloat(tStr));
-            }
-            if (!isNaN(sec) && !isNaN(temp)) pts.push({ sec: sec, temp: temp });
-          }
-        });
-        if (pts.length > 0) {
-          state.profilePoints = pts;
-          saveProfileToStorage();
-        } else {
-          alert("유효한 (시간,온도) 행을 찾지 못했습니다.");
-        }
-      };
-      reader.readAsText(file);
-    }
-
-    function refreshProfileUI() {
-      document.getElementById("profileActiveBadge").textContent = state.profilePoints.length ? "ON" : "";
-      var list = document.getElementById("profilePointsList");
-      list.innerHTML = state.profilePoints.map(function(p, idx) {
-        return '<div style="display:flex; justify-content:space-between; background:var(--card-alt); padding:6px 10px; border-radius:6px;">' +
-          '<span>' + formatTime(p.sec) + '</span>' +
-          '<span style="color:var(--profile); font-weight:700;">' + p.temp + '℃</span>' +
-          '<button type="button" style="background:none; border:none; color:var(--red); cursor:pointer;" onclick="removeProfilePointAt(' + idx + ')">삭제</button>' +
-        '</div>';
-      }).join("");
-    }
-
-    function selectProcess(proc) {
-      document.getElementById("beanProcessInput").value = proc;
-    }
-
-    function updateRoastLevelLabel(val) {
-      var v = parseFloat(val);
-      var name = "중배전";
-      if (v <= 1.8) name = "약배전";
-      else if (v <= 2.6) name = "중약배전";
-      else if (v <= 3.4) name = "중배전";
-      else if (v <= 4.2) name = "중강배전";
-      else name = "강배전";
-      document.getElementById("roastLevelText").textContent = name + " (" + v.toFixed(1) + ")";
-    }
-
-    function saveBeanInfo() {
-      state.beanInfo.name = document.getElementById("beanNameInput").value.trim();
-      state.beanInfo.process = document.getElementById("beanProcessInput").value.trim();
-      state.beanInfo.chargeWeight = parseFloat(document.getElementById("beanChargeInput").value) || null;
-      state.beanInfo.targetLevel = parseFloat(document.getElementById("beanLevelInput").value);
-      document.getElementById("beanBtnLabel").textContent = "🌱 " + (state.beanInfo.name || "생두 정보");
-      closeModal("beanModal");
-    }
-
-    function appendNoteTag(tag) {
-      var el = document.getElementById("roasterNotesInput");
-      el.value = el.value ? el.value + ", " + tag : tag;
-    }
-
-    function previewWeightLoss() {
-      var w = parseFloat(document.getElementById("finalWeightInput").value);
-      var box = document.getElementById("lossPreviewBox");
-      if (state.beanInfo.chargeWeight && w > 0 && w <= state.beanInfo.chargeWeight) {
-        var lossG = state.beanInfo.chargeWeight - w;
-        var lossPct = (lossG / state.beanInfo.chargeWeight) * 100;
-        box.textContent = "손실량 " + lossG.toFixed(1) + "g · 손실률 " + lossPct.toFixed(1) + "%";
-      } else {
-        box.textContent = state.beanInfo.chargeWeight ? "" : "투입량 미입력 (생두 정보에서 투입량을 입력하면 손실률이 계산됩니다)";
-      }
-    }
-
-    function saveFinalWeightAndReport() {
-      var w = parseFloat(document.getElementById("finalWeightInput").value);
-      if (w > 0) {
-        state.finalWeight = w;
-        state.isFinished = true;
-        if (state.beanInfo.chargeWeight) {
-          var pct = ((state.beanInfo.chargeWeight - w) / state.beanInfo.chargeWeight) * 100;
-          var badge = document.getElementById("headerLossBadge");
-          badge.style.display = "inline-flex";
-          badge.textContent = "손실률 " + pct.toFixed(1) + "%";
-        }
-      }
-      closeModal("weightModal");
-      updateUI();
-      // 저장 완료 후 밝은 테마 리포트로 바로 넘기기
-      generateLightReport();
-    }
-
-
-    // =========================================================================
-    // 8. 🔥 [추가 4]: 밝은 테마(Light) 고해상도 리포트 렌더러
-    // =========================================================================
-    var staticChart = null;
-
-    function renderStaticChartForReport() {
-      var ctx = document.getElementById("reportStaticChart").getContext("2d");
-      
-      // Chart.js 플러그인: 데이터 포인트 위에 텍스트(시간/온도/이벤트명) 그리기
-      var dataLabelsPlugin = {
-        id: 'calloutLabels',
-        afterDatasetsDraw: function(chart, args, options) {
-          var ctx = chart.ctx;
-          chart.data.datasets[0].data.forEach(function(dp, index) {
-            if (dp.event) {
-              var meta = chart.getDatasetMeta(0);
-              var x = meta.data[index].x;
-              var y = meta.data[index].y;
-              
-              ctx.save();
-              ctx.fillStyle = "#0F172A"; // 다크네이비 배경 뱃지
-              ctx.beginPath();
-              ctx.roundRect(x - 30, y - 45, 60, 36, 6);
-              ctx.fill();
-              
-              // 삼각형 꼬리
-              ctx.beginPath();
-              ctx.moveTo(x - 6, y - 9);
-              ctx.lineTo(x + 6, y - 9);
-              ctx.lineTo(x, y - 3);
-              ctx.fill();
-
-              ctx.fillStyle = "#FFFFFF";
-              ctx.font = "bold 11px Pretendard";
-              ctx.textAlign = "center";
-              ctx.fillText(dp.event, x, y - 32);
-              
-              ctx.fillStyle = "#CBD5E1";
-              ctx.font = "10px monospace";
-              ctx.fillText(formatTime(dp.x) + " / " + dp.y.toFixed(1) + "℃", x, y - 18);
-              ctx.restore();
-            }
-          });
-        }
-      };
-
-      if (staticChart) staticChart.destroy();
-      
-      var mapBySec = new Map();
-      state.logs.forEach(function(l) { mapBySec.set(l.sec, l); });
-      var deduped = Array.from(mapBySec.values()).sort(function(a, b) { return a.sec - b.sec; });
-      var maxSec = deduped.length ? deduped[deduped.length - 1].sec : 240;
-
-      staticChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          datasets: [
-            {
-              label: "BT (℃)",
-              data: deduped.map(function(l) { return { x: l.sec, y: l.bt, event: l.event }; }),
-              borderColor: "#F97316", // 주황색
-              backgroundColor: "#F97316",
-              borderWidth: 4,
-              pointRadius: function(c) { return (c.raw && c.raw.event) ? 6 : 0; },
-              pointBackgroundColor: "#F97316",
-              pointBorderColor: "#FFFFFF",
-              pointBorderWidth: 2,
-              tension: 0.3
-            },
-            {
-              label: "RoR",
-              data: deduped.map(function(l) { return { x: l.sec, y: mappedRoR(l.ror) }; }),
-              borderColor: "#0EA5E9", // 스카이블루
-              backgroundColor: "rgba(14, 165, 233, 0.1)",
-              borderWidth: 2,
-              fill: true,
-              pointRadius: 0,
-              tension: 0.4
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: false,
-          scales: {
-            x: {
-              type: "linear",
-              min: 0, max: maxSec + 30,
-              grid: { color: "#F1F5F9" },
-              ticks: { color: "#64748B", font: {size: 11}, callback: function(val) { return formatTime(val); } }
-            },
-            y: {
-              min: 0, max: 260,
-              grid: { color: "#F1F5F9" },
-              ticks: { color: "#64748B", font: {size: 11}, stepSize: 50 }
-            }
-          },
-          plugins: { legend: { display: false } }
-        },
-        plugins: [dataLabelsPlugin]
-      });
-    }
-
-    async function generateLightReport() {
-      // 1. 데이터 바인딩
-      var now = new Date();
-      document.getElementById("repDate").textContent = now.getFullYear() + "." + String(now.getMonth()+1).padStart(2,'0') + "." + String(now.getDate()).padStart(2,'0') + " " + String(now.getHours()).padStart(2,'0') + ":" + String(now.getMinutes()).padStart(2,'0');
-      document.getElementById("repBeanName").textContent = state.beanInfo.name || "미지정 생두";
-      document.getElementById("repProcess").textContent = (state.beanInfo.process || "가공방식 미정") + " / 목표: " + state.beanInfo.targetLevel.toFixed(1);
-      
-      document.getElementById("repCharge").textContent = state.beanInfo.chargeWeight ? state.beanInfo.chargeWeight.toFixed(1) : "0.0";
-      document.getElementById("repFinal").textContent = state.finalWeight ? state.finalWeight.toFixed(1) : "0.0";
-      
-      if (state.beanInfo.chargeWeight && state.finalWeight) {
-        var loss = ((state.beanInfo.chargeWeight - state.finalWeight) / state.beanInfo.chargeWeight) * 100;
-        document.getElementById("repLoss").textContent = "수분 손실률 " + loss.toFixed(1) + "%";
-      } else {
-        document.getElementById("repLoss").textContent = "-";
-      }
-
-      var effSec = state.dropSec || state.seconds;
-      document.getElementById("repTotalTime").textContent = formatTime(effSec);
-      var lastBT = state.logs.length ? state.logs[state.logs.length - 1].bt : 0;
-      document.getElementById("repDropTemp").textContent = "배출 온도: " + lastBT.toFixed(1) + "℃";
-
-      if (state.firstCrackSec !== null && effSec > 0) {
-        var dev = effSec - state.firstCrackSec;
-        document.getElementById("repDevTime").textContent = formatTime(dev);
-        document.getElementById("repDtr").textContent = "DTR " + ((dev / effSec) * 100).toFixed(1) + "%";
-      } else {
-        document.getElementById("repDevTime").textContent = "-";
-        document.getElementById("repDtr").textContent = "-";
-      }
-
-      var tp = getTurningPoint();
-      document.getElementById("repTpTemp").textContent = "터닝 포인트: " + (tp ? tp.bt.toFixed(1) + "℃" : "없음 (콜드)");
-      document.getElementById("repFcTime").textContent = state.firstCrackSec ? formatTime(state.firstCrackSec) : "-";
-
-      var ySec = state.yellowSec !== null ? state.yellowSec : Math.min(effSec, state.firstCrackSec !== null ? state.firstCrackSec : effSec);
-      var fcSec = state.firstCrackSec !== null ? state.firstCrackSec : effSec;
-      var dryS = Math.max(0, Math.min(ySec, effSec));
-      var mailS = Math.max(0, Math.min(fcSec, effSec) - dryS);
-      var devS = Math.max(0, effSec - Math.max(dryS, Math.min(fcSec, effSec)));
-
-      document.getElementById("repPhaseDry").style.width = ((dryS / effSec) * 100) + "%";
-      document.getElementById("repPhaseDry").textContent = "DRY " + ((dryS / effSec) * 100).toFixed(0) + "%";
-      document.getElementById("repPhaseMail").style.width = ((mailS / effSec) * 100) + "%";
-      document.getElementById("repPhaseMail").textContent = "MAILLARD " + ((mailS / effSec) * 100).toFixed(0) + "%";
-      document.getElementById("repPhaseDev").style.width = ((devS / effSec) * 100) + "%";
-      document.getElementById("repPhaseDev").textContent = "DEV " + ((devS / effSec) * 100).toFixed(0) + "%";
-
-      var notes = document.getElementById("roasterNotesInput").value.trim();
-      document.getElementById("repNotes").innerHTML = notes ? notes.replace(/
-/g, "<br>") : "입력된 메모가 없습니다.";
-
-      // 2. 차트 렌더링 대기
-      document.getElementById("reportRendererWrap").style.zIndex = "1";
-      renderStaticChartForReport();
-
-      // 3. html2canvas로 캡처
-      if (typeof window.html2canvas !== "undefined") {
-        setTimeout(async function() {
-          var canvas = await html2canvas(document.getElementById("reportRendererWrap"), { 
-            backgroundColor: "#F8FAFC", 
-            scale: 2 
-          });
-          var dataUrl = canvas.toDataURL("image/png");
-          document.getElementById("generatedReportImg").src = dataUrl;
-          document.getElementById("downloadReportLink").href = dataUrl;
-          
-          document.getElementById("reportRendererWrap").style.zIndex = "-1"; // 숨김 복구
-          openModal("reportModal");
-        }, 300); // 차트 렌더링 안정화 대기
-      }
-    }
-
-    function downloadCSVLog() {
-      if (state.logs.length === 0) return;
-      var csv = "Time(s),Time_Str,BT,RoR,Gas,Event
-";
-      state.logs.forEach(function(l) {
-        csv += l.sec + "," + l.timeStr + "," + l.bt.toFixed(1) + "," + l.ror.toFixed(2) + "," + l.gas.toFixed(1) + "," + (l.event || "") + "
-";
-      });
-      var blob = new Blob(["﻿" + csv], { type: 'text/csv;charset=utf-8;' }); // BOM 추가 (엑셀 한글 깨짐 방지)
-      var link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "roast_log_" + Date.now() + ".csv";
-      link.click();
-    }
-
-    async function shareReport() {
-      var imgUrl = document.getElementById("generatedReportImg").src;
-      try {
-        var res = await fetch(imgUrl);
-        var blob = await res.blob();
-        var file = new File([blob], "roast_report.png", { type: "image/png" });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: "로스팅 리포트",
-            text: state.beanInfo.name + " 로스팅 리포트입니다."
-          });
-        } else {
-          alert("이 브라우저에서는 공유 기능을 지원하지 않습니다. 이미지 저장 버튼을 이용해주세요.");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function confirmReset() {
-      if (!confirm("새 로스팅을 시작하시겠습니까? 현재 기록이 모두 삭제됩니다.")) return;
-      clearInterval(state.timerId);
-      state.seconds = 0;
-      state.isRunning = false;
-      state.gas = 6.0; // 기본값 복귀
-      document.getElementById("gasSlider").value = 6.0;
-      document.getElementById("gasValLabel").textContent = "6.0단";
-      state.logs = [];
-      state.chargeSec = null;
-      state.yellowSec = null;
-      state.firstCrackSec = null;
-      state.dropSec = null;
-      state.isDropped = false;
-      state.isFinished = false;
-      state.finalWeight = null;
-      state.currentRoR = 0;
-      document.getElementById("headerLossBadge").style.display = "none";
-      updateChart();
-      updateUI();
-    }
-
-    window.addEventListener("DOMContentLoaded", function() {
-      setupHoldToDrop();
-      refreshProfileUI();
-      updateUI();
-      initChart();
-      window.addEventListener("load", function() {
-        initChart();
-      });
-    });
-  </script>
 </body>
 </html>
